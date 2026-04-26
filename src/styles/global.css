@@ -1,5 +1,6 @@
 /* ── Google Fonts ─────────────────────────────────────────────────────────── */
-@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap');
+@import url('https://cdn.jsdelivr.net/gh/maxwell-k/dejavu-sans-mono-web-font/index.css');
+@import url('//cdn.web-fonts.ge/fonts/dejavu-sans/css/dejavu-sans.min.css');
 
 /* ── Design tokens ────────────────────────────────────────────────────────── */
 :root {
@@ -13,8 +14,8 @@
   --color-muted:        #64748b;
   --color-code-bg:      #0f172a;
 
-  --font-sans: 'Inter', system-ui, -apple-system, sans-serif;
-  --font-mono: 'JetBrains Mono', 'Fira Code', monospace;
+  --font-sans: 'DejaVu Sans', system-ui, -apple-system, sans-serif;
+  --font-mono: 'DejaVu Sans Mono', 'JetBrains Mono', 'Fira Code', monospace;
 
   --radius-sm: 4px;
   --radius-md: 8px;
@@ -419,7 +420,19 @@ a:hover { text-decoration: underline; }
   transition: opacity var(--transition), color var(--transition);
   text-decoration: none;
 }
-.edit-on-github:hover { opacity: 1; color: var(--color-primary); text-decoration: none; }
+.edit-on-github:hover { opacity: 1; color: #000; text-decoration: none; }
+
+/* ── Site header GitHub icon ──────────────────────────────────────────────── */
+.site-nav__github {
+  display: inline-flex;
+  align-items: center;
+  color: var(--color-muted);
+  opacity: 0.45;
+  transition: opacity var(--transition), color var(--transition);
+  text-decoration: none;
+  margin-left: var(--sp2);
+}
+.site-nav__github:hover { opacity: 1; color: #000; }
 
 /* ── TOC ──────────────────────────────────────────────────────────────────── */
 .article-toc {
