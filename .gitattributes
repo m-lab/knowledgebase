@@ -1,0 +1,12 @@
+# Files you own — git will always keep your local version when you pull
+# template updates. Edit these freely; they will never be clobbered.
+#
+# One-time setup required before merging updates:
+#   git config merge.ours.driver true
+
+src/content/**        merge=ours
+src/config.ts         merge=ours
+src/data/tags.ts      merge=ours
+src/pages/about.md    merge=ours
+README.md             merge=ours
+LICENSE               merge=ours
