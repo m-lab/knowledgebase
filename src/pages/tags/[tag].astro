@@ -1,0 +1,51 @@
+---
+import Base from '../../layouts/Base.astro';
+import { getCollection } from 'astro:content';
+import { TAGS, getTagByName } from '../../data/tags';
+import { url } from '../../utils';
+
+function slug(id: string) { return id.replace(/\.mdx?$/, ''); }
+
+export async function getStaticPaths() {
+  const allArticles = await getCollection('articles', ({ data }) => !data.standalone);
+  return TAGS.map(tag => ({
+    params: { tag: tag.name },
+    props: {
+      tag,
+      articles: allArticles.filter(a => (a.data.tags ?? []).includes(tag.name)),
+    },
+  }));
+}
+
+const { tag, articles } = Astro.props;
+---
+
+<Base title={`${tag.label} — Articles`}>
+  <div class="tag-page-header" style={tag.color ? `--color-primary:${tag.color};--color-accent:${tag.color}` : undefined}>
+    <h1>{tag.label}</h1>
+    <p>{articles.length} article{articles.length !== 1 ? 's' : ''}</p>
+  </div>
+
+  <div class="article-grid" style="margin-top:0">
+    {articles.map(article => (
+      <div class="article-grid__item">
+        <div class="article-card">
+          <a href={url(`/${slug(article.id)}/`)} class="article-card__link">{article.data.title}</a>
+          {article.data.description && (
+            <p class="article-card__desc">{article.data.description}</p>
+          )}
+          {article.data.difficulty && (
+            <div class="article-card__meta">
+              <span class={`difficulty difficulty--${article.data.difficulty}`}>
+                {article.data.difficulty}
+              </span>
+            </div>
+          )}
+        </div>
+      </div>
+    ))}
+    {articles.length === 0 && (
+      <p style="color:var(--color-muted);padding:2rem 1.5rem">No articles yet for this tag.</p>
+    )}
+  </div>
+</Base>

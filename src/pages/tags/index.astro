@@ -1,0 +1,50 @@
+---
+import Base from '../../layouts/Base.astro';
+import { getCollection } from 'astro:content';
+import { TAGS, getTagByName } from '../../data/tags';
+import { url } from '../../utils';
+
+function slug(id: string) { return id.replace(/\.mdx?$/, ''); }
+
+const allArticles = await getCollection('articles', ({ data }) => !data.standalone);
+
+const tagMap = new Map<string, typeof allArticles>();
+for (const article of allArticles) {
+  for (const tag of article.data.tags ?? []) {
+    if (!tagMap.has(tag)) tagMap.set(tag, []);
+    tagMap.get(tag)!.push(article);
+  }
+}
+---
+
+<Base title="Browse by Tag">
+  <div class="tags-page">
+    <h1>Browse by Tag</h1>
+    {TAGS.map(tag => {
+      const articles = tagMap.get(tag.name) ?? [];
+      if (articles.length === 0) return null;
+      return (
+        <section class="tag-group" id={tag.name}>
+          <div class="tag-group__header">
+            <h2>
+              <a href={url(`/tags/${tag.name}/`)} style={tag.color ? `color:${tag.color}` : undefined}>
+                {tag.label}
+              </a>
+            </h2>
+            <span class="tag-group__count">{articles.length} article{articles.length !== 1 ? 's' : ''}</span>
+          </div>
+          <div class="tag-articles">
+            {articles.map(article => (
+              <div class="article-card">
+                <a href={url(`/${slug(article.id)}/`)} class="article-card__link">{article.data.title}</a>
+                {article.data.description && (
+                  <p class="article-card__desc">{article.data.description}</p>
+                )}
+              </div>
+            ))}
+          </div>
+        </section>
+      );
+    })}
+  </div>
+</Base>

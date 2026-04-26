@@ -1,0 +1,65 @@
+---
+import { SITE } from '../config';
+import { url } from '../utils';
+import '../styles/global.css';
+
+interface Props {
+  title?: string;
+  description?: string;
+}
+
+const { title, description = SITE.description } = Astro.props;
+const pageTitle = title ? `${title} — ${SITE.title}` : SITE.title;
+const currentPath = Astro.url.pathname;
+---
+
+<!doctype html>
+<html lang="en" style={`--brand-primary:${SITE.colorPrimary};--brand-primary-dark:${SITE.colorPrimaryDark};--brand-accent:${SITE.colorAccent}`}>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="description" content={description} />
+    <title>{pageTitle}</title>
+  </head>
+  <body>
+    <header class="site-header">
+      <div class="site-header__inner">
+        <a href={url('/')} class="site-header__logo">{SITE.title}</a>
+        <button class="site-header__menu-toggle" aria-label="Toggle menu" aria-expanded="false">
+          <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24"
+               fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <line x1="3" y1="6" x2="21" y2="6"/>
+            <line x1="3" y1="12" x2="21" y2="12"/>
+            <line x1="3" y1="18" x2="21" y2="18"/>
+          </svg>
+        </button>
+        <nav class="site-nav" id="site-nav">
+          {SITE.nav.map(link => (
+            <a href={url(link.href)} aria-current={currentPath === link.href ? 'page' : undefined}>
+              {link.label}
+            </a>
+          ))}
+        </nav>
+      </div>
+    </header>
+
+    <main>
+      <slot />
+    </main>
+
+    <footer class="site-footer">
+      <p>{SITE.title} &mdash; Built with <a href="https://astro.build">Astro</a></p>
+    </footer>
+
+    <script>
+      const toggle = document.querySelector('.site-header__menu-toggle');
+      const nav = document.getElementById('site-nav');
+      if (toggle && nav) {
+        toggle.addEventListener('click', () => {
+          const open = nav.classList.toggle('is-open');
+          toggle.setAttribute('aria-expanded', String(open));
+        });
+      }
+    </script>
+  </body>
+</html>

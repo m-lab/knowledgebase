@@ -1,0 +1,65 @@
+---
+import Base from '../layouts/Base.astro';
+import SearchAndFilter from '../components/SearchAndFilter.svelte';
+import { getCollection } from 'astro:content';
+import { SITE } from '../config';
+import { url } from '../utils';
+import { TAGS, getTagByName } from '../data/tags';
+
+const allArticles = await getCollection('articles', ({ data }) => !data.standalone);
+const articles = allArticles.sort((a, b) => {
+  if (a.data.date && b.data.date) return b.data.date.getTime() - a.data.date.getTime();
+  return a.data.title.localeCompare(b.data.title);
+});
+
+function slug(id: string) { return id.replace(/\.mdx?$/, ''); }
+---
+
+<Base>
+  <SearchAndFilter
+    client:load
+    siteTitle={SITE.title}
+    siteTagline={SITE.tagline}
+    tags={TAGS}
+    searchIndexUrl={url('/search.json')}
+  />
+
+  <div class="article-grid" id="article-grid">
+    {articles.map(article => {
+      const tags = article.data.tags ?? [];
+      const tagList = tags.map(t => getTagByName(t));
+      return (
+        <div
+          class="article-grid__item"
+          data-url={url(`/${slug(article.id)}/`)}
+          data-tags={tags.join(' ')}
+          data-title={article.data.title.toLowerCase()}
+          data-description={(article.data.description ?? '').toLowerCase()}
+        >
+          <div class="article-card">
+            <a href={url(`/${slug(article.id)}/`)} class="article-card__link">{article.data.title}</a>
+            {article.data.description && (
+              <p class="article-card__desc">{article.data.description}</p>
+            )}
+            <div class="article-card__meta">
+              {article.data.difficulty && (
+                <span class={`difficulty difficulty--${article.data.difficulty}`}>
+                  {article.data.difficulty}
+                </span>
+              )}
+              {tagList.map(tag => tag && (
+                <a
+                  href={url(`/tags/${tag.name}/`)}
+                  class="tag"
+                  style={tag.color ? `--tag-color:${tag.color}` : undefined}
+                >{tag.label}</a>
+              ))}
+            </div>
+          </div>
+        </div>
+      );
+    })}
+  </div>
+
+  <p class="no-results" id="no-results" hidden>No articles match your search.</p>
+</Base>
