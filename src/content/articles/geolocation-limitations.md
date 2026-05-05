@@ -27,7 +27,7 @@ difficulty: intermediate
 1. **Filter by accuracy:** Use `client.Geo.AccuracyRadiusKm <= 5` to focus on more precise estimates
 2. **Alternative geolocation services:** Consider using paid services like MaxMind GeoIP2, IPinfo, or similar to re-annotate M-Lab data with your own geolocation
 3. **Grid-based analysis:** Aggregate data into geographic grids rather than relying on exact coordinates
-4. **Use newer datasets:** The `ndt7_union` table includes measurements from more servers and may provide better geographic coverage
+
 
 ## For Fine-Grained Analysis
 
