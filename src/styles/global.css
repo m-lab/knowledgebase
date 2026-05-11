@@ -103,6 +103,46 @@ a:hover { text-decoration: underline; }
   flex-shrink: 0;
 }
 
+/* ── Header search ────────────────────────────────────────────────────────── */
+.site-header__search {
+  flex: 1;
+  max-width: 280px;
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+.site-header__search-icon {
+  position: absolute;
+  left: var(--sp3);
+  color: var(--color-muted);
+  pointer-events: none;
+  flex-shrink: 0;
+}
+.site-header__search input {
+  width: 100%;
+  height: 34px;
+  padding: 0 var(--sp3) 0 calc(var(--sp3) + 15px + var(--sp2));
+  font-size: 0.875rem;
+  font-family: var(--font-sans);
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-md);
+  color: var(--color-text);
+  outline: none;
+  transition: border-color var(--transition), box-shadow var(--transition), background var(--transition);
+}
+.site-header__search input::placeholder { color: var(--color-muted); }
+.site-header__search input:focus {
+  border-color: var(--color-primary);
+  background: #fff;
+  box-shadow: 0 0 0 3px color-mix(in srgb, var(--color-primary) 15%, transparent);
+}
+
+@media (max-width: 640px) {
+  .site-header__search { display: none; }
+}
+
+/* ── Nav ──────────────────────────────────────────────────────────────────── */
 .site-nav { display: flex; align-items: center; gap: var(--sp1); margin-left: auto; }
 .site-nav a {
   font-size: 0.875rem;
@@ -198,6 +238,24 @@ a:hover { text-decoration: underline; }
   transform: translateY(-50%);
   color: var(--color-muted);
   pointer-events: none;
+}
+
+/* ── Browse page header (replaces hero on the browse/search page) ─────────── */
+.browse-header {
+  max-width: var(--max-width);
+  margin: var(--sp8) auto var(--sp2);
+  padding: 0 var(--sp6);
+}
+.browse-header h1 {
+  font-size: 1.6rem;
+  font-weight: 800;
+  letter-spacing: -0.02em;
+  color: var(--color-text);
+  margin-bottom: var(--sp1);
+}
+.browse-header p {
+  font-size: 0.95rem;
+  color: var(--color-muted);
 }
 
 /* ── Tag filter bar ───────────────────────────────────────────────────────── */

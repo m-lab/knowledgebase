@@ -31,6 +31,23 @@ const currentPath = Astro.url.pathname;
           <span class="site-header__logo-mark">M</span>
           {SITE.title}
         </a>
+
+        <form class="site-header__search" action={url('/browse/')} method="get" role="search">
+          <svg class="site-header__search-icon" xmlns="http://www.w3.org/2000/svg" width="15" height="15" viewBox="0 0 24 24"
+               fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"
+               aria-hidden="true">
+            <circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/>
+          </svg>
+          <input
+            type="search"
+            name="q"
+            id="header-search"
+            placeholder="Search articles…"
+            autocomplete="off"
+            aria-label="Search articles"
+          />
+        </form>
+
         <button class="site-header__menu-toggle" aria-label="Toggle menu" aria-expanded="false">
           <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24"
                fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
@@ -73,6 +90,13 @@ const currentPath = Astro.url.pathname;
           const open = nav.classList.toggle('is-open');
           toggle.setAttribute('aria-expanded', String(open));
         });
+      }
+
+      // On the browse page, prevent the search form from navigating so the
+      // Svelte component can do live filtering via the listener it attaches on mount.
+      const searchForm = document.querySelector('.site-header__search') as HTMLFormElement | null;
+      if (searchForm && document.getElementById('article-grid')) {
+        searchForm.addEventListener('submit', e => e.preventDefault());
       }
     </script>
   </body>

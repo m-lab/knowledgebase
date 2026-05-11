@@ -96,7 +96,26 @@
     applyFilter();
   });
 
-  onMount(() => {
+  onMount(async () => {
+    // Pre-fill from ?q= URL param (navigated from another page)
+    const params = new URLSearchParams(window.location.search);
+    const initialQuery = params.get('q') ?? '';
+
+    const headerInput = document.querySelector<HTMLInputElement>('#header-search');
+
+    if (initialQuery) {
+      query = initialQuery;
+      if (headerInput) headerInput.value = initialQuery;
+      await loadIndex();
+      matchIds = doSearch(initialQuery);
+    }
+
+    // Wire the header search input to this component for live filtering
+    if (headerInput) {
+      headerInput.addEventListener('input', onInput);
+      headerInput.addEventListener('focus', onFocus);
+    }
+
     applyFilter();
   });
 
@@ -105,25 +124,9 @@
   }
 </script>
 
-<div class="hero">
+<div class="browse-header">
   <h1>{siteTitle}</h1>
   <p>{siteTagline}</p>
-  <div class="hero__search">
-    <span class="search-icon">
-      <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24"
-           fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-        <circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/>
-      </svg>
-    </span>
-    <input
-      type="search"
-      id="kb-search"
-      placeholder="Search articles…"
-      autocomplete="off"
-      oninput={onInput}
-      onfocus={onFocus}
-    />
-  </div>
 </div>
 
 <div class="tag-filter-bar" id="tag-filter-bar">
