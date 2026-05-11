@@ -92,11 +92,31 @@ const currentPath = Astro.url.pathname;
         });
       }
 
-      // On the browse page, prevent the search form from navigating so the
-      // Svelte component can do live filtering via the listener it attaches on mount.
-      const searchForm = document.querySelector('.site-header__search') as HTMLFormElement | null;
-      if (searchForm && document.getElementById('article-grid')) {
-        searchForm.addEventListener('submit', e => e.preventDefault());
+      const searchForm = document.querySelector<HTMLFormElement>('.site-header__search');
+      const searchInput = document.getElementById('header-search') as HTMLInputElement | null;
+
+      if (searchForm && searchInput) {
+        const onBrowsePage = !!document.querySelector('.browse-header');
+
+        if (onBrowsePage) {
+          // Svelte component attaches its own input listener on mount.
+          // Just prevent the form from navigating away.
+          searchForm.addEventListener('submit', e => e.preventDefault());
+        } else {
+          // On all other pages: debounce-navigate to /browse/?q=term so the
+          // user sees live results as they type.
+          const browseUrl = searchForm.action; // already base-path-correct
+          let debounce: ReturnType<typeof setTimeout>;
+          searchInput.addEventListener('input', () => {
+            clearTimeout(debounce);
+            const val = searchInput.value.trim();
+            debounce = setTimeout(() => {
+              window.location.href = val
+                ? `${browseUrl}?q=${encodeURIComponent(val)}`
+                : browseUrl;
+            }, 350);
+          });
+        }
       }
     </script>
   </body>
