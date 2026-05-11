@@ -1,0 +1,91 @@
+@theme {
+  --color-*: initial;
+
+  /* baseline white and black */
+  --color-white: #ffffff;
+  --color-black: #000000;
+
+  /* Neutral Palette (grays) - main button is 200 */
+  --color-neutral-50: #F8FAFC;
+  --color-neutral-100: #F1F5F9;
+  --color-neutral-200: #E2E8F0;
+  --color-neutral-300: #CAD5E2;
+  --color-neutral-400: #90A1B9;
+  --color-neutral-500: #62748E;
+  --color-neutral-600: #45556C;
+  --color-neutral-700: #314158;
+  --color-neutral-800: #1D293D;
+  --color-neutral-900: #0F172B;
+  --color-neutral-950: #020618;
+
+  /* Primary Palette (blues) - Main CTA color is 700 */
+  --color-primary-50: #F0F9FF;
+  --color-primary-100: #DFF2FE;
+  --color-primary-200: #B8E6FE;
+  --color-primary-300: #74D4FF;
+  --color-primary-400: #00BCFF;
+  --color-primary-500: #00A6F4;
+  --color-primary-600: #0084D1;
+  --color-primary-700: #0069A8;
+  --color-primary-800: #00598A;
+  --color-primary-900: #024A70;
+  --color-primary-950: #052F4A;
+
+  /* Secondary Palette (yellows) - Community offerings - main button color is 300 */
+  --color-secondary-50: #FEFCE8;
+  --color-secondary-100: #FEF9C2;
+  --color-secondary-200: #FFF085;
+  --color-secondary-300: #FFDF20;
+  --color-secondary-400: #FDC700;
+  --color-secondary-500: #F0B100;
+  --color-secondary-600: #D08700;
+  --color-secondary-700: #A65F00;
+  --color-secondary-800: #894B00;
+  --color-secondary-900: #733E0A;
+  --color-secondary-950: #432004;
+
+  /* Supporting1 Palette (greens) - Research & insights */
+  --color-supporting1-50: #ECFDF5;
+  --color-supporting1-100: #D0FAE5;
+  --color-supporting1-200: #A4F4CF;
+  --color-supporting1-300: #5EE9B5;
+  --color-supporting1-400: #00D492;
+  --color-supporting1-500: #00BC7D;
+  --color-supporting1-600: #009966;
+  --color-supporting1-700: #007A55;
+  --color-supporting1-800: #006045;
+  --color-supporting1-900: #004F3B;
+  --color-supporting1-950: #002C22;
+
+  /* Supporting2 Palette (sap greens) - Research & insights */
+  --color-supporting2-50: #F4FCE4;
+  --color-supporting2-100: #E8F9C6;
+  --color-supporting2-200: #D6F699;
+  --color-supporting2-300: #B8EE55;
+  --color-supporting2-400: #9EE116;
+  --color-supporting2-500: #81CB13;
+  --color-supporting2-600: #68AF0A;
+  --color-supporting2-700: #497D00;
+  --color-supporting2-800: #3C6300;
+  --color-supporting2-900: #35530E;
+  --color-supporting2-950: #192E03;
+
+  /* Speed Palette (purples) - Speed test features - main button is 600 */
+  --color-speed-50: #FAF5FF;
+  --color-speed-100: #F3E8FF;
+  --color-speed-200: #EAD4FF;
+  --color-speed-300: #DBB1FF;
+  --color-speed-400: #C27BFF;
+  --color-speed-500: #AC47FF;
+  --color-speed-600: #9810FA;
+  --color-speed-700: #8200DA;
+  --color-speed-800: #6D11B0;
+  --color-speed-900: #59168B;
+  --color-speed-950: #3C0366;
+
+
+
+  /* warning colors */
+  --color-warning-light: #FB2C36;
+  --color-warning-dark: #C10007;
+}

@@ -20,11 +20,17 @@ const currentPath = Astro.url.pathname;
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <meta name="description" content={description} />
     <title>{pageTitle}</title>
+    <link rel="preconnect" href="https://fonts.bunny.net" />
+    <link rel="stylesheet" href="https://fonts.bunny.net/css?family=inter:300,400,500,600,700,800,900&display=swap" />
+    <link rel="stylesheet" href="https://fonts.bunny.net/css?family=ibm-plex-mono:400&display=swap" />
   </head>
   <body>
     <header class="site-header">
       <div class="site-header__inner">
-        <a href={url('/')} class="site-header__logo">{SITE.title}</a>
+        <a href={url('/')} class="site-header__logo">
+          <span class="site-header__logo-mark">M</span>
+          {SITE.title}
+        </a>
         <button class="site-header__menu-toggle" aria-label="Toggle menu" aria-expanded="false">
           <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24"
                fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">

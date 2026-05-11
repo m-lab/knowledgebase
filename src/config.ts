@@ -5,9 +5,9 @@ export const SITE = {
   url: 'https://jduckles.github.io/m-lab-kb',
 
   // Brand colors — customize these to match your organization
-  colorPrimary: '#2563eb',
-  colorPrimaryDark: '#1d4ed8',
-  colorAccent: '#7c3aed',
+  colorPrimary: '#0069A8',      // M-Lab primary-700
+  colorPrimaryDark: '#024A70',  // M-Lab primary-900
+  colorAccent: '#009966',       // M-Lab supporting1-600
 
   // GitHub integration — set to enable "Edit on GitHub" buttons
   // Format: 'owner/repo'
