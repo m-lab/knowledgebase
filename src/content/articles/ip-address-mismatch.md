@@ -1,7 +1,7 @@
 ---
 title: "FAQ: IP Address Mismatch in Environment File"
 description: How to fix a node that is unreachable due to a mismatch between the env file IP and the server's actual public IP.
-tags: [byos, node-configuration, troubleshooting, networking]
+tags: [node-operations]
 difficulty: beginner
 ---
 

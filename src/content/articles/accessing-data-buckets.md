@@ -1,7 +1,7 @@
 ---
 title: "FAQ: Accessing M-Lab Data Buckets"
 description: How to access M-Lab's raw NDT7 data in Google Cloud Storage using gsutil or gcloud without permission errors.
-tags: [data-access, cloud-storage]
+tags: [data-access]
 difficulty: beginner
 ---
 

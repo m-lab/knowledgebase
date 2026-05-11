@@ -1,7 +1,7 @@
 ---
 title: "FAQ: Geolocation Limitations in M-Lab Data"
 description: Why M-Lab measurements often share identical coordinates and how to work around coarse geolocation for spatial analysis.
-tags: [geolocation, data-access, privacy, bigquery]
+tags: [data-access, internet-quality]
 difficulty: intermediate
 ---
 

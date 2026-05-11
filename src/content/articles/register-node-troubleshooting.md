@@ -1,7 +1,7 @@
 ---
 title: "FAQ: Docker Compose Troubleshooting - Register Node Issues"
 description: Steps to diagnose and fix a stopped or unresponsive register-node component in a Docker BYOS deployment.
-tags: [docker, byos, troubleshooting, monitoring]
+tags: [node-operations]
 difficulty: intermediate
 ---
 

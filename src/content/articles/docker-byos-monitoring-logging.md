@@ -1,7 +1,7 @@
 ---
 title: "FAQ: Docker BYOS Monitoring and Logging"
 description: Recommended Prometheus metrics endpoints and Docker logging configuration to prevent disk exhaustion on M-Lab BYOS nodes.
-tags: [docker, byos, monitoring, troubleshooting]
+tags: [node-operations]
 difficulty: intermediate
 ---
 

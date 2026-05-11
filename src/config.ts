@@ -17,6 +17,7 @@ export const SITE = {
   // Navigation links shown in the header
   nav: [
     { label: 'Home', href: '/' },
+    { label: 'Browse', href: '/browse/' },
     { label: 'Tags', href: '/tags/' },
     { label: 'About', href: '/about/' },
   ],

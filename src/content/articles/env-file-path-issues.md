@@ -1,7 +1,7 @@
 ---
 title: "FAQ: Environment File Path Issues"
 description: How to resolve "couldn't find env file" errors when running Docker Compose commands for an M-Lab BYOS node.
-tags: [docker, byos, troubleshooting, node-configuration]
+tags: [node-operations]
 difficulty: beginner
 ---
 

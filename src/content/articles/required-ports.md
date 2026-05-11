@@ -1,7 +1,7 @@
 ---
 title: "FAQ: Required Ports for M-Lab Nodes"
 description: Why M-Lab nodes must use ports 80 and 443 and what happens if those ports are blocked.
-tags: [byos, node-configuration, networking]
+tags: [node-operations]
 difficulty: beginner
 ---
 

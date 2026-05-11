@@ -1,7 +1,7 @@
 ---
 title: "FAQ: Test Rate Limits"
 description: M-Lab enforces 40 tests per day per IP address. Learn what this means and how to work within the limit.
-tags: [rate-limits, data-access]
+tags: [internet-quality]
 difficulty: beginner
 ---
 
