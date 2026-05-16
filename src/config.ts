@@ -1,7 +1,7 @@
 export const SITE = {
-  title: 'Knowledge Base',
+  title: 'M-Lab Knowledge Base',
   tagline: 'Find answers, guides, and best practices.',
-  description: 'A knowledge base for our CoP',
+  description: 'A knowledge base for our community',
   url: 'https://jduckles.github.io/m-lab-kb',
 
   // Brand colors — customize these to match your organization
