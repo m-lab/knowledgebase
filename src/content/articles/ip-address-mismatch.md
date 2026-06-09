@@ -1,6 +1,6 @@
 ---
-title: "FAQ: IP Address Mismatch in Environment File"
-description: How to fix a node that is unreachable due to a mismatch between the env file IP and the server's actual public IP.
+title: "FAQ: IP Address Mismatch in BYOS Environment File"
+description: How to fix an M-Lab BYOS node that is unreachable due to a mismatch between the env file IP and the server's actual public IP.
 tags: [node-operations]
 difficulty: beginner
 ---

@@ -3,7 +3,6 @@ title: "M-Lab Network Annotations: Geolocation, ASNs, and What They Mean"
 description: How M-Lab annotates measurements with geographic and network metadata, the accuracy and limitations of each annotation type, and how to use them correctly in analysis.
 tags: [data-access, internet-quality]
 difficulty: intermediate
-starter: true
 ---
 
 Every M-Lab measurement is enriched with metadata about the client's network and location — **annotations**. Understanding what these annotations represent (and where they fall short) is essential for doing rigorous analysis with M-Lab data.
@@ -23,13 +22,14 @@ This means annotations reflect the state of these databases at the time the test
 ### Fields Available
 
 ```
-client.Geo.CountryCode      — ISO 3166-1 alpha-2 (e.g., "US", "DE", "BR")
-client.Geo.CountryName      — Human-readable country name
-client.Geo.Region           — ISO 3166-2 subdivision (e.g., "US-CA" for California)
-client.Geo.City             — City name (MaxMind estimate)
-client.Geo.Latitude         — Latitude (see accuracy notes below)
-client.Geo.Longitude        — Longitude (see accuracy notes below)
-client.Geo.PostalCode       — Postal code (US only, unreliable)
+client.Geo.CountryCode        — ISO 3166-1 alpha-2 (e.g., "US", "DE", "BR")
+client.Geo.CountryName        — Human-readable country name
+client.Geo.Region             — ISO 3166-2 subdivision (e.g., "US-CA" for California)
+client.Geo.City               — City name (MaxMind estimate)
+client.Geo.Latitude           — Latitude (see accuracy notes below)
+client.Geo.Longitude          — Longitude (see accuracy notes below)
+client.Geo.PostalCode         — Postal code (US only, unreliable)
+client.Geo.AccuracyRadiusKm   — Estimated accuracy radius in km
 ```
 
 ### Accuracy and Limitations
@@ -45,6 +45,19 @@ client.Geo.PostalCode       — Postal code (US only, unreliable)
 
 **Do not use lat/lon for fine-grained spatial analysis below ~50 km resolution.** Use the `Region` field for sub-national analysis; it's far more reliable than coordinates.
 
+**Rural and less-populated areas** often have very broad location estimates; geolocation accuracy varies significantly by region and ISP.
+
+### Improving Spatial Precision
+
+If your analysis requires finer geographic resolution:
+
+1. **Filter by accuracy radius** — use `client.Geo.AccuracyRadiusKm <= 5` to focus on higher-confidence estimates
+2. **Re-annotate with paid geolocation** — consider MaxMind GeoIP2, IPinfo, or similar services applied to raw IP addresses from M-Lab data
+3. **Grid-based aggregation** — aggregate data into geographic grids (e.g., 0.5° × 0.5° cells) rather than relying on point coordinates
+4. **Use `Region` for sub-national analysis** — ISO 3166-2 region codes are far more reliable than city or coordinate data
+
+M-Lab's built-in geolocation is not suitable for block-level or infrastructure-specific analysis without supplementary sources.
+
 ### Region Codes
 
 M-Lab uses ISO 3166-2 codes for subdivisions (states, provinces, etc.):
@@ -55,7 +68,7 @@ SELECT
   client.Geo.Region               AS state_code,
   COUNT(*)                        AS tests,
   ROUND(AVG(a.MeanThroughputMbps), 2) AS avg_mbps
-FROM `measurement-lab.ndt.ndt7`
+FROM `measurement-lab.ndt.ndt7_union`
 WHERE client.Geo.CountryCode = 'US'
   AND DATE(a.TestTime) BETWEEN '2024-01-01' AND '2024-12-31'
 GROUP BY state_code
@@ -84,8 +97,8 @@ SELECT
   client.Network.ASNumber AS asn,
   MAX(client.Network.ASName) AS isp_name,   -- stable within ASN
   COUNT(*) AS test_count,
-  ROUND(MEDIAN(a.MeanThroughputMbps), 2) AS median_mbps
-FROM `measurement-lab.ndt.ndt7`
+  ROUND(APPROX_QUANTILES(a.MeanThroughputMbps, 100)[OFFSET(50)], 2) AS median_mbps
+FROM `measurement-lab.ndt.ndt7_union`
 WHERE client.Geo.CountryCode = 'BR'
   AND DATE(a.TestTime) BETWEEN '2024-01-01' AND '2024-03-31'
 GROUP BY asn
@@ -121,4 +134,4 @@ When joining M-Lab data with external datasets (census, FCC broadband maps, etc.
 
 ---
 
-> **TODO for full article:** Add section on the `server` annotations (M-Lab site, metro, geolocation of the server) and how server location affects interpretation. Add section on historical annotation changes — the schema changed in 2020 with the M-Lab 2.0 migration, so some older field names differ. Add worked example of joining M-Lab ASN data with CAIDA's AS rank and type dataset to distinguish eyeball from transit networks.
+<!-- TODO: Add section on the `server` annotations (M-Lab site, metro, geolocation of the server) and how server location affects interpretation. Add section on historical annotation changes — the schema changed in 2020 with the M-Lab 2.0 migration, so some older field names differ. Add worked example of joining M-Lab ASN data with CAIDA's AS rank and type dataset to distinguish eyeball from transit networks. -->

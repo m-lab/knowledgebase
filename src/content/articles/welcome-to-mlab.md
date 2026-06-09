@@ -53,4 +53,4 @@ M-Lab runs monthly community calls, a research fellowship program, and annual ha
 
 ---
 
-> **TODO for full article:** Add overview diagram of the M-Lab platform architecture (measurement points → pipeline → BigQuery). Link to the current list of M-Lab measurement points. Add a brief history timeline (2009 founding → NDT7 → M-Lab 2.0 cloud migration → IQB framework).
+<!-- TODO: Add overview diagram of the M-Lab platform architecture (measurement points → pipeline → BigQuery). Link to the current list of M-Lab measurement points. Add a brief history timeline (2009 founding → NDT7 → M-Lab 2.0 cloud migration → IQB framework). -->

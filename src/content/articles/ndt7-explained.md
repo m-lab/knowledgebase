@@ -3,7 +3,6 @@ title: "How M-Lab Measures Internet Speed: NDT7 and MSAK"
 description: A technical overview of NDT7 and MSAK — what they measure, how the tests work, and how to interpret the results.
 tags: [measurement]
 difficulty: intermediate
-starter: true
 ---
 
 M-Lab's primary measurement tool is **NDT7** (Network Diagnostic Tool, version 7). Understanding what NDT7 actually measures — and what it doesn't — is essential for working with M-Lab data.
@@ -88,4 +87,4 @@ Since 2021, M-Lab has used **access tokens** for NDT7 tests run through the Loca
 
 ---
 
-> **TODO for full article:** Add diagram showing NDT7 test flow (client → Locate API → server selection → measurement → pipeline). Add section on how to run your own NDT7 test from the command line using the reference client. Link to the ndt7-client-go repository.
+<!-- TODO: Add diagram showing NDT7 test flow (client → Locate API → server selection → measurement → pipeline). Add section on how to run your own NDT7 test from the command line using the reference client. Link to the ndt7-client-go repository. -->

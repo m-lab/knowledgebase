@@ -3,7 +3,6 @@ title: "Analyzing M-Lab Data: A Researcher's Guide"
 description: Methods, tools, and best practices for using M-Lab's open datasets in academic research, policy analysis, and community broadband advocacy.
 tags: [research, data-access]
 difficulty: intermediate
-starter: true
 ---
 
 M-Lab data has been used in peer-reviewed publications, regulatory filings, government broadband reports, and advocacy campaigns. This guide covers how to approach M-Lab data for research purposes.
@@ -124,4 +123,4 @@ M-Lab also hosts annual **Open Measurement Gatherings (OMG)** — workshops for 
 
 ---
 
-> **TODO for full article:** Add section on using the Python BigQuery client for reproducible research (pandas + google-cloud-bigquery). Add worked example of broadband mapping use case (matching M-Lab data to census geography). Add section on the NTIA/FCC broadband data programs that have used or reference M-Lab data. Link to example Jupyter notebooks in the M-Lab data tools repository.
+<!-- TODO: Add section on using the Python BigQuery client for reproducible research (pandas + google-cloud-bigquery). Add worked example of broadband mapping use case (matching M-Lab data to census geography). Add section on the NTIA/FCC broadband data programs that have used or reference M-Lab data. Link to example Jupyter notebooks in the M-Lab data tools repository. -->

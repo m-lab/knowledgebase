@@ -1,45 +1,69 @@
 ---
 title: "Getting Started with M-Lab Data in BigQuery"
-description: How to access M-Lab's public datasets in Google BigQuery, run your first queries, and understand the data structure.
-tags: [data-access]
+description: How to get free access to M-Lab's BigQuery datasets, run your first queries, understand the data structure, and work efficiently with large tables.
+tags: [data-access, bigquery]
 difficulty: beginner
-starter: true
 ---
 
-M-Lab publishes all measurement data to Google BigQuery as a public dataset. You can query it for free (within Google's free tier limits) without an M-Lab account — you only need a Google account.
+M-Lab publishes all measurement data to Google BigQuery as a free, open dataset. Access is sponsored by M-Lab — queries against the `measurement-lab` project don't come out of your own GCP quota — but you must join the M-Lab Discuss group first to activate that sponsorship. **Saving query results to your own BigQuery tables, or running queries billed to your own project, will incur charges to you.**
 
-## Setting Up Access
+Questions? Email [support@measurementlab.net](mailto:support@measurementlab.net).
 
-1. Go to [console.cloud.google.com](https://console.cloud.google.com) and sign in
-2. Create or select a Google Cloud project (required to run queries, even against public data)
-3. Open BigQuery from the left menu
-4. In the Explorer panel, click **"+ ADD"** → **"Star a project by name"**
-5. Enter `measurement-lab` and click **Star**
+## Step 1: Join the M-Lab Discuss Group
 
-The `measurement-lab` project will now appear in your Explorer panel with all public datasets.
+Subscribe your Google account to the [M-Lab Discuss group](https://groups.google.com/a/measurementlab.net/g/discuss). Membership grants your account permission to query the `measurement-lab` project at no charge.
+
+The list also carries announcements about data format changes, platform updates, and M-Lab events. All participants are asked to follow the [community guidelines](https://www.measurementlab.net/community-guidelines/).
+
+## Step 2: Connect to BigQuery
+
+### Option A — Google Cloud Console (browser-based)
+
+1. Visit the [BigQuery page for the measurement-lab project](https://console.cloud.google.com/bigquery?project=measurement-lab).
+2. If prompted, accept the BigQuery Terms of Service.
+3. The `measurement-lab` project will appear in the left-hand **Explorer** panel. Click it to browse datasets, tables, and views.
+
+You can now run queries at no charge. You do **not** need to activate Google's free credit offer.
+
+### Option B — Google Cloud SDK (command line)
+
+1. [Download and install the Google Cloud SDK](https://cloud.google.com/sdk/) for your operating system.
+2. Authenticate with the Gmail account you subscribed to M-Lab Discuss:
+   ```
+   gcloud auth login
+   ```
+3. Set your default project:
+   ```
+   gcloud config set project measurement-lab
+   ```
+
+BigQuery's `bq` command-line tool is now available and queries against `measurement-lab` datasets will not be billed to you.
+
+### Service Accounts
+
+If you need to query from an application using a service account (`@developer.gserviceaccount.com`), email [support@measurementlab.net](mailto:support@measurementlab.net) so M-Lab can add it to M-Lab Discuss manually. Ensure the account has the **BigQuery User**, **BigQuery Job User**, and **BigQuery Data Viewer** IAM roles on the `measurement-lab` project.
 
 ## Key Datasets
 
 | Dataset | Description |
 |---------|-------------|
-| `ndt` | NDT speed tests (use the `ndt7` view for modern data) |
-| `traceroute` | Scamper traceroute paths |
-| `msak` | Multi-stream throughput measurements |
-| `wehe` | App-specific traffic differentiation tests |
-| `sidestream` | Passive measurement data (deprecated) |
+| `ndt` | NDT speed tests — use `ndt7_union` for general analysis |
+| `ndt_raw` | Raw NDT archives including traceroute and TCP info |
+| `msak` / `msak_raw` | Multi-stream throughput measurements |
+| `wehe_raw` | App-specific traffic differentiation tests |
 
-For most use cases, start with `measurement-lab.ndt.ndt7`.
+For most use cases, start with `measurement-lab.ndt.ndt7_union`.
 
 ## Your First Query
 
-This query returns the average download speed by country for the last 30 days:
+Average download speed by country for the last 30 days:
 
 ```sql
 SELECT
   client.Geo.CountryCode                     AS country,
   ROUND(AVG(a.MeanThroughputMbps), 2)       AS avg_download_mbps,
   COUNT(*)                                   AS test_count
-FROM `measurement-lab.ndt.ndt7`
+FROM `measurement-lab.ndt.ndt7_union`
 WHERE DATE(a.TestTime) >= DATE_SUB(CURRENT_DATE(), INTERVAL 30 DAY)
   AND a.MeanThroughputMbps > 0
   AND a.MeanThroughputMbps < 10000   -- exclude outliers
@@ -68,8 +92,6 @@ a.LossRate              — packet loss fraction (0.0–1.0)
 client.Geo.CountryCode  — ISO 3166-1 alpha-2 country code
 client.Geo.Region       — ISO 3166-2 region/subdivision code
 client.Geo.City         — city name (MaxMind, coarse precision)
-client.Geo.Latitude     — latitude (city-level precision)
-client.Geo.Longitude    — longitude (city-level precision)
 
 client.Network.ASNumber — client's Autonomous System Number
 client.Network.ASName   — client's ISP/network name
@@ -78,35 +100,34 @@ server.Site             — M-Lab site ID (e.g., "lga01")
 server.Metro            — metro area (e.g., "lga" for New York)
 ```
 
-## Query Costs and Free Tier
+## Unified Views vs. Raw Tables
 
-BigQuery charges for data scanned. The NDT7 table is large (~5 TB/month of new data). To minimize costs:
+M-Lab provides both raw tables and cleaned **unified views**:
 
-- Always filter by `DATE(a.TestTime)` to use partition pruning
-- Use the **preview** feature in the BigQuery UI to check data before running queries
-- Add `LIMIT` clauses during development
-- Google's free tier includes 1 TB of query processing per month
+- `measurement-lab.ndt.ndt7_union` — **recommended** for most analysis; quality-filtered, includes M-Lab-managed and Host-Managed server data
+- `measurement-lab.ndt.ndt7` — M-Lab-managed servers only
+- `measurement-lab.ndt.ndt7_dynamic` — Host-Managed servers only
+- `measurement-lab.ndt_raw.*` — unfiltered 1-to-1 archives; use only if you need test failures or custom quality logic
+
+The unified views exclude tests shorter than 9 seconds, tests with less than 8 KB transferred, and M-Lab's own monitoring traffic.
+
+## Query Costs and Partition Pruning
+
+The NDT7 table is large (~5 TB/month of new data). **Always** filter by `DATE(a.TestTime)` to use BigQuery's partition pruning:
 
 ```sql
 -- Efficient: uses partition pruning
 WHERE DATE(a.TestTime) = '2024-06-01'
 
--- Inefficient: scans all partitions
+-- Inefficient: scans all partitions (very expensive)
 WHERE a.TestTime > '2024-06-01'
 ```
 
-## Unified Views vs. Raw Tables
-
-M-Lab provides both raw tables and cleaned **unified views**:
-
-- `measurement-lab.ndt.ndt7` — recommended for most analysis (filtered for valid tests)
-- `measurement-lab.ndt.ndt7_raw` — all rows including invalid/incomplete tests
-
-The unified view applies standard quality filters: tests with zero throughput, abnormally short durations, or known client bugs are excluded. Use the raw table only if you need to understand test failures.
+Use the **preview** feature in the BigQuery UI to inspect data before running queries, and add `LIMIT` clauses during development.
 
 ## Exporting Data
 
-For larger analyses, export results to Google Cloud Storage rather than downloading from BigQuery:
+For larger analyses, export to Google Cloud Storage rather than downloading from BigQuery:
 
 ```sql
 EXPORT DATA
@@ -117,11 +138,17 @@ EXPORT DATA
   )
 AS (
   SELECT a.TestTime, a.MeanThroughputMbps, client.Geo.CountryCode
-  FROM `measurement-lab.ndt.ndt7`
+  FROM `measurement-lab.ndt.ndt7_union`
   WHERE DATE(a.TestTime) = '2024-06-01'
 );
 ```
 
----
+## Further Reading
 
-> **TODO for full article:** Add section on using the BigQuery API from Python (google-cloud-bigquery library). Add worked example of ISP comparison query. Add section on M-Lab's long-term schema support policy (stable column names since 2020). Link to the M-Lab data documentation at measurementlab.net/data.
+- [M-Lab BigQuery Schema](https://www.measurementlab.net/data/docs/bq/schema) — full schema documentation
+- [Google BigQuery documentation](https://cloud.google.com/bigquery/what-is-bigquery)
+- [Querying date-partitioned tables](https://cloud.google.com/bigquery/docs/querying-partitioned-tables)
+- [NDT (Network Diagnostic Tool)](../test-ndt) — the primary dataset
+- [Analyzing M-Lab Data: A Researcher's Guide](../research-guide) — ISP comparison patterns and advanced queries
+
+<!-- TODO: Add section on using the BigQuery API from Python (google-cloud-bigquery library). Add worked example of ISP comparison query. Add section on M-Lab's long-term schema support policy (stable column names since 2020). Link to the M-Lab data documentation at measurementlab.net/data. -->

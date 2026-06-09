@@ -3,7 +3,6 @@ title: "Beyond Speed: Understanding Internet Quality Metrics"
 description: Why download speed alone is an incomplete picture of internet performance, and how M-Lab measures latency, packet loss, and working internet quality.
 tags: [internet-quality, measurement]
 difficulty: beginner
-starter: true
 ---
 
 "How fast is your internet?" is the wrong question. Speed is one dimension of a multi-dimensional problem. M-Lab and the broader internet measurement community have been developing richer frameworks for understanding what makes an internet connection work well — or not.
@@ -97,4 +96,4 @@ These benchmarks vary by use case. The FCC uses 25/3 Mbps as a minimum definitio
 
 ---
 
-> **TODO for full article:** Add section on the BITAG (Broadband Internet Technical Advisory Group) working latency report and its influence on M-Lab's IQB work. Add worked example of comparing loaded vs. unloaded latency using MSAK data. Include a chart showing how packet loss affects video call quality (MOS score vs. loss rate).
+<!-- TODO: Add section on the BITAG (Broadband Internet Technical Advisory Group) working latency report and its influence on M-Lab's IQB work. Add worked example of comparing loaded vs. unloaded latency using MSAK data. Include a chart showing how packet loss affects video call quality (MOS score vs. loss rate). -->

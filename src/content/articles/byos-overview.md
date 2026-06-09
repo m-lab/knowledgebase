@@ -3,7 +3,6 @@ title: "Running Your Own M-Lab Node: The BYOS Program"
 description: An overview of M-Lab's Bring Your Own Server program — what it is, what's required, and how hosting a node contributes to global internet measurement.
 tags: [node-operations]
 difficulty: intermediate
-starter: true
 ---
 
 M-Lab's **Bring Your Own Server (BYOS)** program lets organizations host M-Lab measurement nodes on their own infrastructure. BYOS nodes expand M-Lab's geographic coverage and let you run standardized measurements from your network.
@@ -93,4 +92,4 @@ See the [Docker BYOS Monitoring and Logging](#) article for recommended Promethe
 
 ---
 
-> **TODO for full article:** Add step-by-step deployment walkthrough with the actual Docker Compose file structure. Add section on the Experiment Review Committee process for nodes hosting additional experiments. Add troubleshooting FAQ links. Include expected traffic volumes and what to expect in the first week after registration.
+<!-- TODO: Add step-by-step deployment walkthrough with the actual Docker Compose file structure. Add section on the Experiment Review Committee process for nodes hosting additional experiments. Add troubleshooting FAQ links. Include expected traffic volumes and what to expect in the first week after registration. -->

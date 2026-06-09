@@ -3,7 +3,6 @@ title: "M-Lab Traceroute Data: Network Paths and Routing Analysis"
 description: An overview of M-Lab's traceroute datasets — what Scamper measures, how to access the data in BigQuery, and common research applications.
 tags: [measurement, data-access]
 difficulty: intermediate
-starter: true
 ---
 
 Every NDT7 test on M-Lab triggers a traceroute from the M-Lab server back to the client. This creates one of the largest longitudinal collections of internet routing data in the world — paired with performance measurements.
@@ -129,4 +128,4 @@ Traceroute data is large. The Scamper dataset is hundreds of terabytes. Strategi
 
 ---
 
-> **TODO for full article:** Add section on extracting single traceroutes using the M-Lab traceroute extraction tool (blog post: 2022-extracting-single-traceroute). Add worked example of AS path analysis using the CAIDA AS relationship dataset for enrichment. Add section on known limitations (MPLS tunnels hiding intermediate hops, load balancers causing inconsistent paths).
+<!-- TODO: Add section on extracting single traceroutes using the M-Lab traceroute extraction tool (blog post: 2022-extracting-single-traceroute). Add worked example of AS path analysis using the CAIDA AS relationship dataset for enrichment. Add section on known limitations (MPLS tunnels hiding intermediate hops, load balancers causing inconsistent paths). -->
