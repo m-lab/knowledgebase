@@ -5,12 +5,11 @@ tags: [node-operations]
 difficulty: intermediate
 ---
 
-M-Lab's **Bring Your Own Server (BYOS)** program lets organizations host M-Lab measurement nodes on their own infrastructure. BYOS nodes expand M-Lab's geographic coverage and let you run standardized measurements from your network.
+M-Lab's **Bring Your Own Server (BYOS)** program lets organizations host M-Lab measurement nodes on their own infrastructure. BYOS nodes expand M-Lab's test server coverage and let you run standardized measurements from your network.
 
 ## Why Host a Node?
 
 - **Expand coverage** — M-Lab has measurement points at major internet exchange facilities, but hosting a node puts measurement capacity directly in your network
-- **Local measurement** — tests from your region use your node as the closest server, generating high-quality local data
 - **Understand your network** — see NDT7 results from your own perspective as an ISP, campus, or community network
 - **Contribute to open data** — all measurements from BYOS nodes are published as open data, just like M-Lab's own infrastructure
 
