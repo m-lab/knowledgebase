@@ -14,46 +14,27 @@ concurrency:
   group: pages
   cancel-in-progress: false
 
-env:
-  FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true
-
 jobs:
   build:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
+      - name: Checkout your repository using git
+        uses: actions/checkout@v6
 
-      - uses: actions/setup-node@v4
-        with:
-          node-version: 22
-          cache: npm
-
-      - name: Configure Pages
-        id: pages
-        uses: actions/configure-pages@v5
-        with:
-          enablement: true
-
-      - name: Install dependencies
-        run: npm ci
-
-      - name: Build
-        run: npm run build
-        env:
-          SITE: ${{ steps.pages.outputs.base_url }}
-          BASE_PATH: ${{ steps.pages.outputs.base_path }}
-
-      - uses: actions/upload-pages-artifact@v3
-        with:
-          path: dist/
+      - name: Install, build, and upload your site
+        uses: withastro/action@v6
+        # with:
+        #   path: .                    # root of Astro project (default: .)
+        #   node-version: 24           # defaults to 24
+        #   package-manager: npm@latest  # auto-detected from lockfile
 
   deploy:
     needs: build
     runs-on: ubuntu-latest
     environment:
       name: github-pages
-      url: ${{ steps.deploy.outputs.page_url }}
+      url: ${{ steps.deployment.outputs.page_url }}
     steps:
       - name: Deploy to GitHub Pages
-        id: deploy
-        uses: actions/deploy-pages@v4
+        id: deployment
+        uses: actions/deploy-pages@v5
