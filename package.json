@@ -5,7 +5,8 @@
   "scripts": {
     "dev": "astro dev",
     "build": "astro build",
-    "preview": "astro preview"
+    "preview": "astro preview",
+    "todo": "node scripts/todo.js"
   },
   "dependencies": {
     "@astrojs/svelte": "^7.0.0",
