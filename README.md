@@ -2,7 +2,6 @@
 
 This repository houses the source for the https://kb.measurementlab.net website. We use this website to share information about datasets, software and tools that help M-Lab community members get the most out of experimental data, tools and the global infrastructure we manage.
 
-A clean, searchable knowledge base template built with [Astro](https://astro.build) and [Svelte](https://svelte.dev). Designed for teams and communities of practice.
 
 ## Quick start
 
