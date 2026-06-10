@@ -2,7 +2,7 @@ export const SITE = {
   title: 'M-Lab Knowledge Base',
   tagline: 'Find answers, guides, and best practices.',
   description: 'A knowledge base for our community',
-  url: 'https://jduckles.github.io/m-lab-kb',
+  url: 'https://kb.measurementlab.net',
 
   // Brand colors — customize these to match your organization
   colorPrimary: '#0069A8',      // M-Lab primary-700
@@ -11,7 +11,7 @@ export const SITE = {
 
   // GitHub integration — set to enable "Edit on GitHub" buttons
   // Format: 'owner/repo'
-  githubRepo: 'jduckles/m-lab-kb',
+  githubRepo: 'm-lab/knowledgebase',
   githubBranch: 'main',
 
   // Navigation links shown in the header
