@@ -132,6 +132,3 @@ When joining M-Lab data with external datasets (census, FCC broadband maps, etc.
 | ZIP/Postal | Low | Use sparingly, US only |
 | Lat/lon | Low | Only for coarse (50+ km) spatial analysis |
 
----
-<I don't find the last paragraph super clear and I am not sure what is the key point.>
-<!-- TODO: Add section on the `server` annotations (M-Lab site, metro, geolocation of the server) and how server location affects interpretation. Add section on historical annotation changes — the schema changed in 2020 with the M-Lab 2.0 migration, so some older field names differ. Add worked example of joining M-Lab ASN data with CAIDA's AS rank and type dataset to distinguish eyeball from transit networks. -->
