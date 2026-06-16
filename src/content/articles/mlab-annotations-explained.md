@@ -34,45 +34,45 @@ client.Geo.AccuracyRadiusKm   — Estimated accuracy radius in km
 
 ### Accuracy and Limitations
 
-**Country-level** geolocation is generally reliable (>99% accuracy for most major countries).
+**Country-level** IP geolocation is generally suitable for coarse aggregation, especially in major markets, but it should still be treated as an inferred database annotation rather than ground truth.
 
-**City-level** accuracy is much lower. MaxMind's GeoLite2 (the free database M-Lab uses) is accurate to the city level for roughly 75–80% of IP addresses — but "city level" can mean within 50 km for dense urban areas.
+**City-level** geolocation is much less reliable. Published accuracy numbers can be misleading because they depend on the evaluation dataset, the definition of “city-level,” and the type of IP address being geolocated.
 
-**Coordinates are city centroids**, not user locations. All measurements attributed to a city may share identical coordinates (the city center). This is by design:
+**Coordinates are representative locations, not exact user or server locations.** In M-Lab data, latitude and longitude should not be interpreted as device-level coordinates for clients or as exact physical coordinates for M-Lab servers. Many measurements attributed to the same city may share the same coordinate, often corresponding to a city centroid or another representative database location. This means that both the client-side and server-side coordinates are useful for coarse geographic aggregation, but not for neighborhood-, building-, or infrastructure-level analysis.
 
-1. Privacy — M-Lab data is public; precise coordinates would expose user locations
-2. Accuracy — IP geolocation cannot determine exact addresses
+**Do not use latitude/longitude for fine-grained spatial analysis** Even when coordinates appear precise, the underlying geolocation may only be accurate at city scale. For sub-national analysis, prefer `client.Geo.Region` over point coordinates when state/province-level aggregation is sufficient.
 
-**Do not use lat/lon for fine-grained spatial analysis below ~50 km resolution.** Use the `Region` field for sub-national analysis; it's far more reliable than coordinates.
-
-**Rural and less-populated areas** often have very broad location estimates; geolocation accuracy varies significantly by region and ISP.
+**Rural, mobile, and less-populated areas require particular caution.** Geolocation quality varies substantially by region, ISP, access technology, and address block. Errors are not uniform, so a single global accuracy number can obscure the cases where geolocation is least reliable. Recent measurement work shows that errors can vary by network type and geography: fixed-network IPs may have relatively small median errors, while mobile and Global South prefixes can have much larger errors and higher failure rates ([arXiv:2605.21937](https://arxiv.org/pdf/2605.21937)).
 
 ### Improving Spatial Precision
 
 If your analysis requires finer geographic resolution:
 
-1. **Filter by accuracy radius** — use `client.Geo.AccuracyRadiusKm <= 5` to focus on higher-confidence estimates
-2. **Re-annotate with paid geolocation** — consider MaxMind GeoIP2, IPinfo, or similar services applied to raw IP addresses from M-Lab data
-3. **Grid-based aggregation** — aggregate data into geographic grids (e.g., 0.5° × 0.5° cells) rather than relying on point coordinates
-4. **Use `Region` for sub-national analysis** — ISO 3166-2 region codes are far more reliable than city or coordinate data
+1. **Filter by accuracy radius** — use `client.Geo.AccuracyRadiusKm`, but treat it as a confidence signal rather than a guarantee.
+2. **Use M-Lab server-selection metadata to identify likely errors** — M-Lab uses one geolocation system at test time to select a nearby server and another system, MaxMind GeoLite2, to annotate the public dataset. As described in Salamatian and Gill’s M-Lab blog post, researchers can compare the server that actually served the test with the nearest server implied by the published client geolocation. Large inconsistencies between the two can flag potentially incorrect client geolocation. A detailed description is available on [Improving M-Lab Geolocation](https://measurementlab.net/blog/improving-m-lab-geolocation)
+3. **Avoid overinterpreting city labels** — city-level labels are useful for coarse aggregation, not for neighborhood-, block-, or infrastructure-level claims.
+4. **Aggregate spatially** — use larger geographic cells or administrative regions rather than individual latitude/longitude points.
+5. **Use `Region` for sub-national analysis** — ISO 3166-2 region codes are generally more appropriate for state/province-level analysis than city centroids.
+6. **Validate with supplementary sources when precision matters** — for rural, mobile, infrastructure-specific, or policy-sensitive analyses, M-Lab’s built-in geolocation should be supplemented with additional geolocation sources or ground-truth validation.
 
-M-Lab's built-in geolocation is not suitable for block-level or infrastructure-specific analysis without supplementary sources.
+M-Lab’s built-in geolocation is appropriate for coarse spatial summaries, but it is not suitable for block-level, household-level, or infrastructure-specific analysis without additional validation.
 
 ### Region Codes
 
-M-Lab uses ISO 3166-2 codes for subdivisions (states, provinces, etc.):
+M-Lab uses ISO 3166-2 codes for subdivisions such as states and provinces:
 
 ```sql
 -- US state-level analysis
 SELECT
-  client.Geo.Region               AS state_code,
-  COUNT(*)                        AS tests,
+  client.Geo.Region AS state_code,
+  COUNT(*) AS tests,
   ROUND(AVG(a.MeanThroughputMbps), 2) AS avg_mbps
 FROM `measurement-lab.ndt.ndt7_union`
 WHERE client.Geo.CountryCode = 'US'
   AND DATE(a.TestTime) BETWEEN '2024-01-01' AND '2024-12-31'
 GROUP BY state_code
-ORDER BY tests DESC
+ORDER BY tests DESC;
+### Improving Spatial Precision
 ```
 
 ## Network Annotations (ASN)
@@ -85,11 +85,13 @@ client.Network.ASName       — AS name from MaxMind (e.g., "Comcast Cable")
 client.Network.CIDR         — IP prefix the client address belongs to (e.g., "73.0.0.0/8")
 ```
 
-### Why ASN is More Reliable Than City
+### What ASN Annotations Mean
 
-ASN annotations are derived from **BGP routing tables** (RouteViews), which are authoritative. If an IP address belongs to Comcast's AS7922, that's a fact about the routing infrastructure — not an estimate. ASN-level analysis is therefore more reliable than city-level analysis.
+ASN annotations identify the Autonomous System that appears to originate the prefix containing the client IP address in the routing data used by M-Lab’s annotation pipeline. In practice, this makes `ASNumber` a useful way to group measurements by network.
 
-For ISP comparisons, always use `ASNumber` rather than `ASName`. Names change (ISP mergers, rebranding), but ASNs are permanent identifiers.
+IP-to-AS mappings are derived from routing data and can be affected by route visibility, MOAS prefixes, third-party address use, resellers, VPNs, and stale or coarse-grained prefix mappings. They identify the AS announcing the client prefix, not necessarily the user’s retail ISP. ASN annotations should thus be treated as inferred metadata rather than perfect ground truth. 
+
+The accompanying `ASName` field provides a human-readable name for that ASN. This name is useful for display and interpretation, but it should not be treated as a stable identifier. For ISP comparisons, prefer `ASNumber` over `ASName`. AS names can change due to mergers and rebranding, whereas ASNs are more stable identifiers. Even so, some organizations operate multiple ASNs, and some ASNs contain multiple brands or customer populations. 
 
 ```sql
 -- Top ISPs by test volume in a country
@@ -118,8 +120,6 @@ M-Lab has invested in improving geolocation accuracy. Key milestones:
 - **2023** — Added metadata tracking geolocation database vintage (which version of MaxMind was used)
 - **2025** — Ongoing work to improve accuracy for underrepresented regions
 
-M-Lab published a blog post on [Improving M-Lab Geolocation](https://measurementlab.net/blog/improving-m-lab-geolocation) describing ongoing methodology improvements.
-
 ## Matching M-Lab Data to Other Datasets
 
 When joining M-Lab data with external datasets (census, FCC broadband maps, etc.):
@@ -127,11 +127,8 @@ When joining M-Lab data with external datasets (census, FCC broadband maps, etc.
 | Join level | Reliability | Recommended approach |
 |-----------|------------|----------------------|
 | Country | High | `CountryCode` |
-| State/Province | High | `Region` (ISO 3166-2) |
+| State/Province | High/Medium | `Region` (ISO 3166-2) |
 | City | Medium | `City` name, but validate with test counts |
 | ZIP/Postal | Low | Use sparingly, US only |
 | Lat/lon | Low | Only for coarse (50+ km) spatial analysis |
 
----
-
-<!-- TODO: Add section on the `server` annotations (M-Lab site, metro, geolocation of the server) and how server location affects interpretation. Add section on historical annotation changes — the schema changed in 2020 with the M-Lab 2.0 migration, so some older field names differ. Add worked example of joining M-Lab ASN data with CAIDA's AS rank and type dataset to distinguish eyeball from transit networks. -->
