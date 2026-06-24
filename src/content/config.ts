@@ -10,6 +10,7 @@ const articles = defineCollection({
     difficulty: z.enum(['beginner', 'intermediate', 'advanced']).optional(),
     standalone: z.boolean().default(false),
     starter: z.boolean().default(false),
+    order: z.number().optional(),
   }),
 });
 
