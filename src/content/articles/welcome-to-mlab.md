@@ -4,6 +4,7 @@ description: An introduction to what M-Lab is, what it measures, and how its ope
 tags: [measurement, research]
 difficulty: beginner
 starter: true
+order: 1
 ---
 
 Measurement Lab (M-Lab) is the world's largest open internet measurement platform. Since 2009, M-Lab has collected billions of measurements from users around the globe, all published as open data under a Creative Commons license.

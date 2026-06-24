@@ -5,7 +5,13 @@ import { SITE } from '../config';
 import { url } from '../utils';
 
 const allArticles = await getCollection('articles', ({ data }) => !data.standalone);
-const starterArticles = allArticles.filter(a => a.data.starter);
+const starterArticles = allArticles
+  .filter(a => a.data.starter)
+  .sort((a, b) => {
+    const ao = a.data.order ?? Infinity;
+    const bo = b.data.order ?? Infinity;
+    return ao - bo;
+  });
 
 function slug(id: string) { return id.replace(/\.mdx?$/, ''); }
 ---
