@@ -1,0 +1,56 @@
+media:
+  input: public/uploads
+  output: /uploads
+
+content:
+  - name: articles
+    label: Articles
+    path: src/content/articles
+    type: collection
+    format: yaml-frontmatter
+    view:
+      fields: [title, description, tags, difficulty]
+    fields:
+      - name: title
+        label: Title
+        type: string
+        required: true
+      - name: description
+        label: Description
+        type: text
+      - name: tags
+        label: Tags
+        type: select
+        list: true
+        options:
+          values:
+            - value: data-access
+              label: Data Access
+            - value: measurement
+              label: Measurement Tools
+            - value: node-operations
+              label: Node Operations
+            - value: internet-quality
+              label: Internet Quality
+            - value: research
+              label: Research & Analysis
+      - name: date
+        label: Date
+        type: date
+      - name: difficulty
+        label: Difficulty
+        type: select
+        options:
+          values:
+            - beginner
+            - intermediate
+            - advanced
+      - name: standalone
+        label: Standalone
+        type: boolean
+      - name: starter
+        label: Starter
+        type: boolean
+      - name: body
+        label: Body
+        type: rich-text
