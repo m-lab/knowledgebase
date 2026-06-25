@@ -89,17 +89,8 @@ a:hover { text-decoration: underline; }
 .site-header__logo:hover { text-decoration: none; color: var(--color-primary); }
 
 .site-header__logo-mark {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
   width: 28px;
   height: 28px;
-  background: var(--color-primary);
-  border-radius: var(--radius-sm);
-  color: #fff;
-  font-weight: 800;
-  font-size: 0.75rem;
-  letter-spacing: 0;
   flex-shrink: 0;
 }
 
