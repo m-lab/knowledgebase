@@ -79,22 +79,6 @@ const metrics = [
     </div>
   </div>
 
-  <!-- ── What M-Lab measures ───────────────────────────────────────────── -->
-  <section class="measures-strip">
-    <div class="measures-strip__inner">
-      <p class="measures-strip__label">What every M-Lab test measures</p>
-      <div class="measures-grid">
-        {metrics.map(m => (
-          <div class="measure-card">
-            <span class="measure-card__icon">{m.icon}</span>
-            <strong class="measure-card__label">{m.label}</strong>
-            <p class="measure-card__desc">{m.desc}</p>
-          </div>
-        ))}
-      </div>
-    </div>
-  </section>
-
   <!-- ── Audience paths ────────────────────────────────────────────────── -->
   <section class="paths-section">
     <div class="paths-section__inner">
@@ -108,6 +92,22 @@ const metrics = [
             <p class="path-card__pitch">{p.pitch}</p>
             <span class="path-card__cta">{p.cta}</span>
           </a>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <!-- ── What M-Lab measures ───────────────────────────────────────────── -->
+  <section class="measures-strip">
+    <div class="measures-strip__inner">
+      <p class="measures-strip__label">What every M-Lab test measures</p>
+      <div class="measures-grid">
+        {metrics.map(m => (
+          <div class="measure-card">
+            <span class="measure-card__icon">{m.icon}</span>
+            <strong class="measure-card__label">{m.label}</strong>
+            <p class="measure-card__desc">{m.desc}</p>
+          </div>
         ))}
       </div>
     </div>
