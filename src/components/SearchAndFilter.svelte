@@ -47,10 +47,16 @@
   function doSearch(q: string): Set<string> | null {
     if (!lunrIndex || !q) return null;
     try {
-      const terms = q.trim().split(/\s+/);
-      const qStr = terms.map((t, i) => i === terms.length - 1 ? t + '*' : t).join(' ');
+      // Every term gets:
+      //   * wildcard suffix for prefix matching (handles partial typing)
+      //   ~1 edit distance for typo tolerance on terms longer than 4 chars
+      const terms = q.trim().split(/\s+/).filter(Boolean);
+      const qStr = terms.map(t =>
+        t.length > 4 ? `${t}* ${t}~1` : `${t}*`
+      ).join(' ');
       return new Set(lunrIndex.search(qStr).map(r => r.ref));
     } catch {
+      // Fallback: try the raw query (e.g. if it contains lunr operators)
       try {
         return new Set(lunrIndex.search(q).map(r => r.ref));
       } catch { return new Set(); }
