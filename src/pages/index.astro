@@ -1,114 +1,338 @@
 ---
 import Base from '../layouts/Base.astro';
-import { getCollection } from 'astro:content';
 import { SITE } from '../config';
 import { url } from '../utils';
+import { TAGS } from '../data/tags';
 
-const allArticles = await getCollection('articles', ({ data }) => !data.standalone);
-const starterArticles = allArticles
-  .filter(a => a.data.starter)
-  .sort((a, b) => {
-    const ao = a.data.order ?? Infinity;
-    const bo = b.data.order ?? Infinity;
-    return ao - bo;
-  });
+// Audience paths — each maps to a getting-started article
+const audiencePaths = [
+  {
+    icon: '🔬',
+    role: 'Researcher',
+    pitch: 'Access billions of open measurements for peer-reviewed studies, longitudinal analysis, and reproducible internet research.',
+    href: url('/getting-started-researchers/'),
+    cta: 'Start researching →',
+  },
+  {
+    icon: '🏛️',
+    role: 'Policymaker',
+    pitch: 'Use independent, verifiable broadband data to inform regulatory filings, evaluate connectivity programs, and support evidence-based policy.',
+    href: url('/getting-started-policymakers/'),
+    cta: 'Explore policy resources →',
+  },
+  {
+    icon: '🌐',
+    role: 'ISP / IXP',
+    pitch: 'Understand how customers experience your network from a neutral, third-party vantage point. Optionally host your own M-Lab node.',
+    href: url('/getting-started-isp-ixp/'),
+    cta: 'Get started as an ISP →',
+  },
+  {
+    icon: '📣',
+    role: 'Advocate',
+    pitch: 'Document ISP behavior, support community broadband efforts, and make evidence-based arguments with open, independently verifiable data.',
+    href: url('/getting-started-advocates/'),
+    cta: 'Start advocating →',
+  },
+];
 
-function slug(id: string) { return id.replace(/\.mdx?$/, ''); }
+// What M-Lab measures — four key metrics with brief descriptions
+const metrics = [
+  {
+    icon: '⬇️',
+    label: 'Download & Upload Speed',
+    desc: 'Single-stream throughput measured under real network conditions — sensitive to congestion and impairment, not just peak capacity.',
+  },
+  {
+    icon: '⏱️',
+    label: 'Latency',
+    desc: 'Round-trip time between your device and the server. Low latency matters for video calls, gaming, and interactive applications.',
+  },
+  {
+    icon: '📦',
+    label: 'Packet Loss',
+    desc: 'The fraction of packets dropped in transit. Even small amounts of loss can severely degrade throughput and real-time traffic.',
+  },
+  {
+    icon: '🗺️',
+    label: 'Network Paths',
+    desc: 'Traceroute measurements capture the route packets take through the internet — one of the world\'s largest longitudinal routing datasets.',
+  },
+];
 ---
 
 <Base>
-  <!-- Hero -->
+
+  <!-- ── Hero ──────────────────────────────────────────────────────────── -->
   <div class="hero">
-    <h1>{SITE.title}</h1>
-    <p>{SITE.tagline}</p>
-    <a href={url('/browse/')} class="hero__browse-btn">Browse all articles →</a>
+    <div class="hero__inner">
+      <div class="hero__badge">Open Internet Measurement Since 2009</div>
+      <h1>Understand the internet<br/>with open data</h1>
+      <div class="hero__actions">
+        <a href="https://speed.measurementlab.net" class="hero__btn hero__btn--primary" target="_blank" rel="noopener">
+          Run a speed test ↗
+        </a>
+        <a href={url('/welcome-to-mlab/')} class="hero__btn hero__btn--ghost">
+          What is M-Lab? →
+        </a>
+      </div>
+    </div>
   </div>
 
-  <!-- Starter articles grid -->
-  <div class="starter-section">
-    <div class="starter-section__header">
-      <h2>Get started</h2>
-      <p>Guides covering the essentials of M-Lab data, measurement tools, and how to run your own node.</p>
-    </div>
-
-    <div class="article-grid" id="article-grid">
-      {starterArticles.map(article => (
-        <div class="article-grid__item">
-          <div class="article-card">
-            <a href={url(`/${slug(article.id)}/`)} class="article-card__link">{article.data.title}</a>
-            {article.data.description && (
-              <p class="article-card__desc">{article.data.description}</p>
-            )}
+  <!-- ── What M-Lab measures ───────────────────────────────────────────── -->
+  <section class="measures-strip">
+    <div class="measures-strip__inner">
+      <p class="measures-strip__label">What every M-Lab test measures</p>
+      <div class="measures-grid">
+        {metrics.map(m => (
+          <div class="measure-card">
+            <span class="measure-card__icon">{m.icon}</span>
+            <strong class="measure-card__label">{m.label}</strong>
+            <p class="measure-card__desc">{m.desc}</p>
           </div>
-        </div>
-      ))}
+        ))}
+      </div>
     </div>
+  </section>
 
-    <div class="starter-section__footer">
-      <a href={url('/browse/')} class="browse-link">
-        View all articles, search, and filter by topic →
-      </a>
+  <!-- ── Audience paths ────────────────────────────────────────────────── -->
+  <section class="paths-section">
+    <div class="paths-section__inner">
+      <h2>Where do you want to start?</h2>
+      <p class="paths-section__sub">Choose the path that matches how you plan to use M-Lab.</p>
+      <div class="paths-grid">
+        {audiencePaths.map(p => (
+          <a href={p.href} class="path-card">
+            <span class="path-card__icon">{p.icon}</span>
+            <strong class="path-card__role">{p.role}</strong>
+            <p class="path-card__pitch">{p.pitch}</p>
+            <span class="path-card__cta">{p.cta}</span>
+          </a>
+        ))}
+      </div>
     </div>
-  </div>
+  </section>
+
+  <!-- ── Browse by topic ───────────────────────────────────────────────── -->
+  <section class="topics-section">
+    <div class="topics-section__inner">
+      <h2>Browse by topic</h2>
+      <div class="topics-tags">
+        {TAGS.map(tag => (
+          <a
+            href={url(`/tags/${tag.name}/`)}
+            class="tag topics-tag"
+            style={tag.color ? `--tag-color:${tag.color}` : ''}
+          >{tag.label}</a>
+        ))}
+        <a href={url('/browse/')} class="topics-browse-all">Browse all articles →</a>
+      </div>
+    </div>
+  </section>
+
+
 </Base>
 
 <style>
-  .hero__browse-btn {
-    display: inline-block;
-    margin-top: var(--sp4);
-    padding: var(--sp3) var(--sp6);
-    background: rgba(255,255,255,0.15);
-    border: 1px solid rgba(255,255,255,0.4);
-    border-radius: var(--radius-lg);
+  /* ── Hero ───────────────────────────────────────────────────────────── */
+  .hero {
+    background: linear-gradient(150deg, var(--color-primary) 0%, var(--color-primary-dark) 100%);
     color: #fff;
+    padding: var(--sp16) var(--sp6);
+  }
+  .hero__inner {
+    max-width: 680px;
+    margin: 0 auto;
+    text-align: center;
+  }
+  .hero__badge {
+    display: inline-block;
+    background: rgba(255,255,255,0.15);
+    border: 1px solid rgba(255,255,255,0.3);
+    border-radius: 999px;
+    font-size: 0.75rem;
+    font-weight: 600;
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+    padding: var(--sp1) var(--sp4);
+    margin-bottom: var(--sp5);
+    color: rgba(255,255,255,0.9);
+  }
+  .hero h1 {
+    font-size: clamp(2rem, 5vw, 3rem);
+    font-weight: 800;
+    line-height: 1.15;
+    letter-spacing: -0.03em;
+    margin-bottom: var(--sp4);
+  }
+  .hero__actions {
+    display: flex;
+    gap: var(--sp3);
+    justify-content: center;
+    flex-wrap: wrap;
+    margin-top: var(--sp8);
+  }
+  .hero__btn {
+    display: inline-block;
+    padding: var(--sp3) var(--sp6);
+    border-radius: var(--radius-lg);
     font-weight: 600;
     font-size: 0.95rem;
     text-decoration: none;
-    transition: background var(--transition), border-color var(--transition);
+    transition: background var(--transition), border-color var(--transition), opacity var(--transition);
   }
-  .hero__browse-btn:hover {
-    background: rgba(255,255,255,0.25);
-    border-color: rgba(255,255,255,0.6);
-    text-decoration: none;
+  .hero__btn--primary {
+    background: #fff;
+    color: var(--color-primary);
+  }
+  .hero__btn--primary:hover { opacity: 0.9; text-decoration: none; }
+  .hero__btn--ghost {
+    background: rgba(255,255,255,0.12);
+    border: 1px solid rgba(255,255,255,0.4);
+    color: #fff;
+  }
+  .hero__btn--ghost:hover { background: rgba(255,255,255,0.22); text-decoration: none; }
+
+  /* ── What M-Lab measures ──────────────────────────────────────────── */
+  .measures-strip {
+    background: var(--color-surface);
+    border-bottom: 1px solid var(--color-border);
+    padding: var(--sp10) var(--sp6);
+  }
+  .measures-strip__inner {
+    max-width: var(--max-width);
+    margin: 0 auto;
+  }
+  .measures-strip__label {
+    font-size: 0.75rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: var(--color-muted);
+    text-align: center;
+    margin-bottom: var(--sp6);
+  }
+  .measures-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: var(--sp5);
+    margin-bottom: var(--sp6);
+  }
+  .measure-card {
+    display: flex;
+    flex-direction: column;
+    gap: var(--sp2);
+    padding: var(--sp4);
+    background: #fff;
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-md);
+  }
+  .measure-card__icon { font-size: 1.4rem; }
+  .measure-card__label {
+    font-size: 0.9rem;
+    font-weight: 700;
+    color: var(--color-text);
+  }
+  .measure-card__desc {
+    font-size: 0.82rem;
+    color: var(--color-muted);
+    line-height: 1.55;
   }
 
-  .starter-section {
+  /* ── Audience paths ───────────────────────────────────────────────── */
+  .paths-section {
+    padding: var(--sp12) var(--sp6);
+    border-bottom: 1px solid var(--color-border);
+  }
+  .paths-section__inner {
     max-width: var(--max-width);
-    margin: var(--sp10) auto var(--sp16);
-    padding: 0 var(--sp6);
+    margin: 0 auto;
   }
-  .starter-section__header {
-    margin-bottom: var(--sp8);
-  }
-  .starter-section__header h2 {
+  .paths-section h2 {
     font-size: 1.6rem;
     font-weight: 800;
+    letter-spacing: -0.02em;
     color: var(--color-text);
     margin-bottom: var(--sp2);
-    letter-spacing: -0.02em;
   }
-  .starter-section__header p {
+  .paths-section__sub {
     color: var(--color-muted);
+    margin-bottom: var(--sp8);
     font-size: 1rem;
   }
-
-  /* Override the global .article-grid margin when inside starter-section */
-  .starter-section .article-grid {
-    margin-bottom: var(--sp8);
+  .paths-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+    gap: var(--sp5);
   }
-
-  .starter-section__footer {
-    text-align: center;
-    padding-top: var(--sp4);
-    border-top: 1px solid var(--color-border);
+  .path-card {
+    display: flex;
+    flex-direction: column;
+    gap: var(--sp2);
+    padding: var(--sp6);
+    background: #fff;
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-lg);
+    text-decoration: none;
+    transition: border-color var(--transition), box-shadow var(--transition), transform 200ms ease;
   }
-  .browse-link {
-    font-size: 0.95rem;
-    font-weight: 500;
-    color: var(--color-primary);
+  .path-card:hover {
+    border-color: var(--color-primary);
+    box-shadow: 0 6px 24px rgba(0,0,0,0.08);
+    transform: translateY(-2px);
     text-decoration: none;
   }
-  .browse-link:hover {
-    text-decoration: underline;
+  .path-card__icon { font-size: 1.8rem; margin-bottom: var(--sp1); }
+  .path-card__role {
+    font-size: 1rem;
+    font-weight: 700;
+    color: var(--color-text);
   }
+  .path-card__pitch {
+    font-size: 0.875rem;
+    color: var(--color-muted);
+    line-height: 1.6;
+    flex: 1;
+  }
+  .path-card__cta {
+    font-size: 0.85rem;
+    font-weight: 600;
+    color: var(--color-primary);
+    margin-top: var(--sp2);
+  }
+
+  /* ── Browse by topic ──────────────────────────────────────────────── */
+  .topics-section {
+    padding: var(--sp10) var(--sp6);
+    border-bottom: 1px solid var(--color-border);
+    background: var(--color-surface);
+  }
+  .topics-section__inner {
+    max-width: var(--max-width);
+    margin: 0 auto;
+  }
+  .topics-section h2 {
+    font-size: 1.3rem;
+    font-weight: 800;
+    letter-spacing: -0.02em;
+    margin-bottom: var(--sp5);
+    color: var(--color-text);
+  }
+  .topics-tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--sp2);
+    align-items: center;
+  }
+  .topics-tag {
+    font-size: 0.85rem;
+    padding: var(--sp2) var(--sp4);
+  }
+  .topics-browse-all {
+    font-size: 0.875rem;
+    font-weight: 500;
+    color: var(--color-primary);
+    margin-left: var(--sp2);
+  }
+
 </style>
