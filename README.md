@@ -41,6 +41,32 @@ That's it — the article appears on the home page automatically.
 | `difficulty` | string | `beginner` \| `intermediate` \| `advanced` |
 | `standalone` | boolean | `true` hides the article from index/tags/search |
 
+## Callout boxes
+
+Use callout boxes to highlight tips, important notes, warnings, or caveats. Write them as raw HTML in your markdown file — Astro's markdown renderer doesn't process markdown syntax inside HTML blocks, so write links and emphasis as HTML:
+
+```html
+<div class="callout callout--tip">
+<span class="callout-icon">💡</span>
+<div class="callout-body"><p>Content here. Use <strong>bold</strong> and <a href="...">links</a> as HTML.</p></div>
+</div>
+```
+
+Four variants:
+
+| Class | Color | Icon | Use for |
+|---|---|---|---|
+| `callout--note` | Blue | ℹ️ | Definitions, context, cross-references |
+| `callout--tip` | Green | 💡 | "Try it yourself", helpful shortcuts, Binder links |
+| `callout--warn` | Yellow | ⚠️ | Caveats, gotchas, things that may surprise |
+| `callout--danger` | Red | ❗ | Data quality issues, breaking changes, errors |
+
+**Do not use markdown `>` blockquotes for callouts.** Reserve `>` for actual quoted text (citations, attribution).
+
+## Inline code
+
+Wrap terms, column names, file paths, and short code snippets in backticks: `` `download_p50` ``, `` `country_code` ``. The site renders them as gray rounded pills — no extra decoration needed.
+
 ## Deploy to GitHub Pages
 
 1. Push to GitHub

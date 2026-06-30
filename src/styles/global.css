@@ -441,6 +441,11 @@ a:hover { text-decoration: underline; }
   padding: 0.1em 0.35em;
   color: var(--color-text);
 }
+/* Remove backtick pseudo-elements added by Tailwind Typography */
+.prose code::before,
+.prose code::after {
+  content: none;
+}
 .prose pre {
   background: var(--color-code-bg);
   border-radius: var(--radius-md);

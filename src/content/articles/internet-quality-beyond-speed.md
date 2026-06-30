@@ -58,7 +58,10 @@ In 2024–2025, M-Lab began developing the **Internet Quality Barometer (IQB)** 
 
 The IQB builds on the "responsiveness" concept from Apple's RPM test and BITAG's working latency research. M-Lab is working to publish IQB methodology and include IQB scores in BigQuery.
 
-> See the M-Lab blog post [Internet Quality Barometer Prototype v1](https://measurementlab.net/blog/iqb-prototype-v1) for the current methodology.
+<div class="callout callout--note">
+<span class="callout-icon">ℹ️</span>
+<div class="callout-body"><p>See the M-Lab blog post <a href="https://measurementlab.net/blog/iqb-prototype-v1">Internet Quality Barometer Prototype v1</a> for the current methodology.</p></div>
+</div>
 
 ## Rate Limits and Test Integrity
 

@@ -7,7 +7,10 @@ difficulty: beginner
 
 M-Lab publishes a dataset called **Monthly Stats** — pre-computed monthly summaries of NDT speed test results, available as [Parquet](https://parquet.apache.org/) files. Monthly Stats make it possible to explore M-Lab data without writing BigQuery SQL or processing billions of raw test records.
 
-> **Explore the data interactively:** [Open the Monthly Stats introduction notebook on Binder](https://mybinder.org/v2/gh/m-lab/mlab-notebooks/HEAD?urlpath=%2Fdoc%2Ftree%2Fmonthlystats%2F00-introduction-and-catalog.ipynb) — no installation required.
+<div class="callout callout--tip">
+<span class="callout-icon">💡</span>
+<div class="callout-body"><p><strong>Explore the data interactively:</strong> <a href="https://mybinder.org/v2/gh/m-lab/mlab-notebooks/HEAD?urlpath=%2Fdoc%2Ftree%2Fmonthlystats%2F00-introduction-and-catalog.ipynb">Open the Monthly Stats introduction notebook on Binder</a> — no installation required.</p></div>
+</div>
 
 ## What Monthly Stats Are
 
@@ -30,7 +33,10 @@ Monthly Stats are published at six geographic granularities, called **slices**:
 
 Each granularity is split into download and upload files, giving twelve file types per month. The download files contain `download_p{N}`, `latency_p{N}`, and `loss_p{N}` columns; the upload files add `upload_p{N}`.
 
-> **Note on ASN:** ASN stands for Autonomous System Number — a number assigned to each network operator (ISP, university, cloud provider, etc.). ASN-level slices let you compare performance across providers within the same country or region. See [M-Lab Network Annotations](../mlab-annotations-explained) for details.
+<div class="callout callout--note">
+<span class="callout-icon">ℹ️</span>
+<div class="callout-body"><p><strong>ASN</strong> stands for Autonomous System Number — a number assigned to each network operator (ISP, university, cloud provider, etc.). ASN-level slices let you compare performance across providers within the same country or region. See <a href="../mlab-annotations-explained">M-Lab Network Annotations</a> for details.</p></div>
+</div>
 
 ## Data Schema
 

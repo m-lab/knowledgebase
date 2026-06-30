@@ -7,7 +7,10 @@ difficulty: intermediate
 
 Monthly Stats files store the full **percentile distribution** of each metric across all NDT tests in a given geography and month. Understanding what percentiles mean — and a critical quirk in how latency and loss are stored — is essential for correct analysis.
 
-> **Try it yourself:** [Open the country-level explorer on Binder](https://mybinder.org/v2/gh/m-lab/mlab-notebooks/HEAD?urlpath=%2Fdoc%2Ftree%2Fmonthlystats%2F01-country-level.ipynb)
+<div class="callout callout--tip">
+<span class="callout-icon">💡</span>
+<div class="callout-body"><p><strong>Try it yourself:</strong> <a href="https://mybinder.org/v2/gh/m-lab/mlab-notebooks/HEAD?urlpath=%2Fdoc%2Ftree%2Fmonthlystats%2F01-country-level.ipynb">Open the country-level explorer on Binder</a></p></div>
+</div>
 
 ## What a Percentile Means Here
 
