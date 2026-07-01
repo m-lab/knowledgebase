@@ -8,6 +8,23 @@ version: 0.1.0
 
 This skill guides writing and editing articles for the M-Lab Knowledge Base, an Astro-based site at `m-lab-kb/`. Articles live in `m-lab-kb/src/content/articles/` as Markdown files.
 
+## Live Article Index (fetch first)
+
+Before writing or editing any article, fetch the live index of published articles:
+
+```
+https://kb.measurementlab.net/article-index.txt
+```
+
+It lists every published article grouped by tag, with slug, difficulty, tags, description, and title. Use it to:
+
+- avoid duplicating an existing article (check before creating a new file)
+- choose accurate cross-links (`../slug` format)
+- match existing slug naming and difficulty conventions
+- see which tags are actually in use on the live site
+
+The live index is authoritative for what's published; the local `m-lab-kb/src/content/articles/` directory may also contain newer unpublished drafts — check both.
+
 ## Article Frontmatter Schema
 
 Every article requires this frontmatter (from `m-lab-kb/src/content/config.ts`):
@@ -189,7 +206,7 @@ Before finalizing any article:
 ### Reference Files
 
 - **`references/mlab-context.md`** — M-Lab domain knowledge: datasets, key concepts, external URLs, audience types
-- **`references/article-index.md`** — all existing articles with slugs and summaries for cross-linking
+- **Live article index** — fetch `https://kb.measurementlab.net/article-index.txt` for all published articles with slugs, tags, and summaries for cross-linking (see "Live Article Index" above)
 
 ### Existing Articles to Study as Templates
 
