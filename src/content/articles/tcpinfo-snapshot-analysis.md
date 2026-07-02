@@ -43,6 +43,7 @@ The remaining ~50% of rows are the real NDT connections — but those connection
 
 Every completed NDT test has a UUID (`id`) that appears in both `ndt.ndt7` (or `ndt.ndt5`) and `ndt.tcpinfo`. Joining on `id` and `date` keeps only connections tied to a real test result and discards all scanner/handshake noise.
 
+<!-- sqltest -->
 ```sql
 -- Join TCPinfo with NDT7 test results
 SELECT
@@ -78,6 +79,7 @@ LIMIT 10
 
 To understand the quality of TCPinfo data for a set of tests, it helps to look at the distribution of snapshot counts. Connections with only 1–2 snapshots are noise; completed NDT downloads typically have 10–100+ snapshots.
 
+<!-- sqltest -->
 ```sql
 -- Snapshot count distribution for all tcpinfo rows (includes noise)
 WITH snapshot_counts AS (
@@ -99,6 +101,7 @@ GROUP BY num_snapshots
 ORDER BY num_snapshots
 ```
 
+<!-- sqltest -->
 ```sql
 -- Snapshot count distribution for completed NDT7 tests only (noise removed)
 WITH snapshot_counts AS (
@@ -153,6 +156,7 @@ TCPinfo's `RTTVar` field (kernel RTTVAR, in microseconds) provides a per-connect
   <div class="callout-body"><strong>Sampling density caveat.</strong> At most sites, BigQuery snapshots are ~110 ms apart; at LGA-class sites, ~260 ms apart. This is sufficient for characterizing latency distributions across many tests, but may be too coarse for sub-100 ms jitter analysis within a single connection. For sub-100 ms resolution, the full snapshot data is available in the raw <code>.zst</code> archives on GCS.</div>
 </div>
 
+<!-- sqltest -->
 ```sql
 -- RTT and jitter summary for completed NDT7 downloads, by country
 SELECT
