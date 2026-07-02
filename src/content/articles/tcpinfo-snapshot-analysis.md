@@ -188,7 +188,7 @@ If you need to identify which sites are in the slow-hardware batch, you can comp
 
 ## Raw Data on GCS
 
-For analyses requiring the full 10 ms resolution, the complete unthinnned snapshot archives are available in Google Cloud Storage:
+For analyses requiring the full 10 ms resolution, the complete unthinned snapshot archives are available in Google Cloud Storage:
 
 ```
 gs://archive-measurement-lab/ndt/tcpinfo/YYYY/MM/DD/
