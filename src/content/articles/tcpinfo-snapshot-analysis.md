@@ -170,7 +170,7 @@ JOIN `measurement-lab.ndt.tcpinfo` AS tcp
   ON  ndt7.id   = tcp.id
   AND ndt7.date = tcp.date
 WHERE
-    DATE(ndt7.a.TestTime) = '2026-06-01'
+    ndt7.date = '2026-06-01'
     AND ndt7.a.MeanThroughputMbps IS NOT NULL
 GROUP BY country, site
 HAVING test_count > 100
