@@ -88,9 +88,8 @@ WITH snapshot_counts AS (
     ARRAY_LENGTH(raw.Snapshots) AS num_snapshots
   FROM `measurement-lab.ndt.tcpinfo`
   WHERE
-    date = '2026-05-12'
+    date = '2026-06-01'
     AND client.Geo.CountryCode = 'US'
-  LIMIT 10000
 )
 SELECT
   num_snapshots,
@@ -116,7 +115,6 @@ WITH snapshot_counts AS (
     ndt7.date = '2026-06-01'
     AND ndt7.a.MeanThroughputMbps IS NOT NULL
     AND tcp.client.Geo.CountryCode = 'US'
-  LIMIT 10000
 )
 SELECT
   num_snapshots,
