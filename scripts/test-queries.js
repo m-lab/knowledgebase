@@ -98,10 +98,15 @@ function gcloud(cmdArgs) {
   }
 }
 
-const token = gcloud(['auth', 'application-default', 'print-access-token']);
+// Token sources, in order: explicit env (CI passes one from
+// google-github-actions/auth), then local gcloud ADC.
+const token =
+  process.env.GOOGLE_OAUTH_ACCESS_TOKEN ||
+  gcloud(['auth', 'application-default', 'print-access-token']);
 if (!token) {
-  console.log(`${yellow}⚠  Skipping query tests: no Application Default Credentials.${reset}`);
-  console.log(`${dim}   Run: gcloud auth application-default login${reset}`);
+  console.log(`${yellow}⚠  Skipping query tests: no Google Cloud credentials.${reset}`);
+  console.log(`${dim}   Locally: gcloud auth application-default login${reset}`);
+  console.log(`${dim}   CI: set GOOGLE_OAUTH_ACCESS_TOKEN${reset}`);
   process.exit(0);
 }
 
