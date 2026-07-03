@@ -196,7 +196,7 @@ For analyses requiring the full 10 ms resolution, the complete unthinned snapsho
 gs://archive-measurement-lab/ndt/tcpinfo/YYYY/MM/DD/
 ```
 
-Files are stored in `.zst`-compressed JSONL format. 
+Each day's directory contains `.tgz` tarballs (one per server, per time window). Inside each tarball are per-connection files in `.jsonl.zst` format — one Zstandard-compressed JSONL file per TCP connection, holding that connection's full snapshot time series. To work with the data, download the tarball, extract it, then decompress individual connection files with `zstd -d` (or read them directly with a library that supports streaming Zstandard).
 
 
 <!-- TODO: Add section on unnesting the raw.Snapshots array in BigQuery for within-connection time series analysis. -->
