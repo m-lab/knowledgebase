@@ -31,12 +31,14 @@ A 1 Gbps connection with 200 ms latency or 2% packet loss will perform worse for
 **Working latency** (sometimes called "loaded latency") is the round-trip time during a data transfer. When a connection is busy sending or receiving data, latency often spikes dramatically — this is the real-world experience of lag during uploads or video calls.
 
 In M-Lab NDT7 data:
+<!-- sqltest -->
 ```sql
+-- NDT7 Data Query
 SELECT
   a.MinRTT,         -- best-case (unloaded) latency in ms
   a.MeanThroughputMbps
 FROM `measurement-lab.ndt.ndt7`
-WHERE DATE(a.TestTime) = '2024-06-01'
+WHERE date = '2024-06-01'
 ```
 
 ### Packet Loss

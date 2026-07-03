@@ -70,22 +70,25 @@ Both use the `id` field (the flow UUID) to join with corresponding measurement t
 
 **Join NDT result with its forward traceroute:**
 
+<!-- sqltest -->
 ```sql
+-- Join NDT results with forward traceroute
 SELECT
   ndt.a.TestTime,
   ndt.a.MeanThroughputMbps,
   ndt.client.Geo.CountryCode,
   tr.raw.Tracelb.Dst AS traceroute_destination
-FROM `measurement-lab.ndt.ndt7_union` AS ndt
+FROM `measurement-lab.ndt.ndt7` AS ndt
 JOIN `measurement-lab.ndt_raw.scamper1` AS tr
   ON ndt.id = tr.id
-WHERE DATE(ndt.a.TestTime) = '2024-06-01'
-LIMIT 100
+WHERE ndt.date = '2024-06-01' and tr.date = '2024-06-01'
 ```
 
 **Extract individual hops** (traceroute uses a deeply nested schema — UNNEST to work with individual hop data):
 
+<!-- sqltest -->
 ```sql
+-- Extract individual hops
 SELECT
   a.StartTime,
   a.Source.IP   AS server_ip,
@@ -95,10 +98,10 @@ SELECT
   rtt.RTT       AS hop_rtt_ms
 FROM `measurement-lab.ndt_raw.scamper1`,
   UNNEST(raw.Tracelb.Nodes) AS hop,
-  UNNEST(hop.Links) AS link,
-  UNNEST(link.Probes) AS probe,
-  UNNEST(probe.Replies) AS rtt
-WHERE DATE(a.StartTime) = '2024-01-15'
+  UNNEST(raw.Tracelb.nodes.Links) AS link,
+  UNNEST(link.links.Probes) AS probe,
+  UNNEST(link.links.Probes.Replies) AS rtt
+WHERE date = '2024-01-15'
 LIMIT 100
 ```
 

@@ -91,23 +91,26 @@ The current recommended view for general use is `measurement-lab.ndt.ndt7_union`
 
 **A simple first query** — average download speed by country over the last 30 days:
 
+<!-- sqltest --> 
 ```sql
+-- Average download speed by country over past 30-days
 SELECT
   client.Geo.CountryCode AS country,
   ROUND(AVG(a.MeanThroughputMbps), 2) AS avg_download_mbps,
   COUNT(*) AS test_count
-FROM `measurement-lab.ndt.ndt7_union`
-WHERE DATE(a.TestTime) >= DATE_SUB(CURRENT_DATE(), INTERVAL 30 DAY)
+FROM `measurement-lab.ndt.ndt7`
+WHERE date >= DATE_SUB(CURRENT_DATE(), INTERVAL 30 DAY)
   AND a.MeanThroughputMbps > 0
   AND a.MeanThroughputMbps < 10000
 GROUP BY country
 ORDER BY avg_download_mbps DESC
-LIMIT 20
 ```
 
 **Key fields for analysis:**
 
+<!-- sqltest -->
 ```sql
+-- Key fields
 SELECT
   a.TestTime,
   a.MeanThroughputMbps,          -- download speed in Mbps
@@ -117,10 +120,9 @@ SELECT
   client.Geo.Region,
   client.Network.ASNumber,
   client.Network.ASName
-FROM `measurement-lab.ndt.ndt7_union`
-WHERE DATE(a.TestTime) = '2024-01-01'
+FROM `measurement-lab.ndt.ndt7`
+WHERE date = '2024-01-01'
   AND a.MeanThroughputMbps > 0
-LIMIT 100
 ```
 
 Always filter by `DATE(a.TestTime)` to use BigQuery's partition pruning — without it you'll scan the entire multi-terabyte table.

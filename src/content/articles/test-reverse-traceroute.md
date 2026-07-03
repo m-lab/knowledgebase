@@ -76,7 +76,9 @@ The primary table is `measurement-lab.revtr_raw.revtr1`. Additional supporting t
 
 **Query 1 — High-quality reverse paths only** (reaches destination, no interdomain symmetry, no type-4-induced loops):
 
+<!-- sqltest -->
 ```sql
+-- High quality reveres paths only
 SELECT date, raw
 FROM `measurement-lab.revtr_raw.revtr1`
 WHERE DATE(date) = '2024-06-01'
@@ -99,7 +101,9 @@ WHERE DATE(date) = '2024-06-01'
 
 **Query 2 — Failure breakdown by reason:**
 
+<!-- sqltest -->
 ```sql
+-- Failure breakdown by reason
 SELECT DATE(date) AS day, raw.fail_reason, COUNT(*) AS count
 FROM `measurement-lab.revtr_raw.revtr1`
 WHERE date BETWEEN '2024-06-01' AND '2024-06-07'
@@ -109,7 +113,9 @@ ORDER BY day, count DESC
 
 **Query 3 — Join forward and reverse paths for a given measurement:**
 
+<!-- sqltest -->
 ```sql
+-- Join forward and reverse paths
 SELECT t1.raw AS revtr_data, t2.raw AS trace_data
 FROM `measurement-lab.revtr_raw.revtr1` AS t1
 CROSS JOIN UNNEST(t1.raw.revtr_hops) AS hop

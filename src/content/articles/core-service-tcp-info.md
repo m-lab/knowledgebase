@@ -46,18 +46,19 @@ TCP INFO data uses M-Lab's standard column format as described in the [Long Term
 
 **Joining TCP INFO with NDT results:**
 
+<!-- sqltest -->
 ```sql
+-- Joining TCP info with NDT results
 SELECT
   ndt.a.TestTime,
   ndt.a.MeanThroughputMbps,
   ndt.client.Geo.CountryCode,
-  tcpinfo.MinRTT,
-  tcpinfo.SndCwnd
+  tcpinfo.a.FinalSnapshot.tcpinfo.MinRTT,
+  tcpinfo.a.FinalSnapshot.tcpinfo.SndCwnd
 FROM `measurement-lab.ndt.ndt7` AS ndt
 JOIN `measurement-lab.ndt.tcpinfo` AS tcpinfo
   ON ndt.id = tcpinfo.id
-WHERE DATE(ndt.a.TestTime) = '2024-06-01'
-LIMIT 1000
+WHERE ndt.date = '2024-06-01' and tcpinfo.date = '2024-06-01'
 ```
 
 <!-- FIXME: Verify exact join key and column names against current schema — the above is illustrative. -->

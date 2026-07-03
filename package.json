@@ -6,7 +6,8 @@
     "dev": "astro dev",
     "build": "astro build",
     "preview": "astro preview",
-    "todo": "node scripts/todo.js"
+    "todo": "node scripts/todo.js",
+    "test:queries": "node scripts/test-queries.js"
   },
   "dependencies": {
     "@astrojs/svelte": "^7.0.0",

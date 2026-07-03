@@ -86,6 +86,34 @@ Four variants:
 
 Wrap terms, column names, file paths, and short code snippets in backticks: `` `download_p50` ``, `` `country_code` ``. The site renders them as gray rounded pills — no extra decoration needed.
 
+## Testing BigQuery examples
+
+SQL code blocks in articles can be validated against the live BigQuery schemas using free dry-run queries — no data is scanned and nothing is billed. This catches syntax errors and stale column paths (e.g. a field that moved between the `ndt.tcpinfo` view and raw tables) before an article ships.
+
+**Annotating a block.** Testing is opt-in per block. Put an HTML comment on the line directly above the fence:
+
+````markdown
+<!-- sqltest -->
+```sql
+SELECT ... FROM `measurement-lab.ndt.ndt7` ...
+```
+````
+
+A decorated block must be a complete, runnable GoogleSQL query. To permanently exclude a block that looks like SQL but isn't runnable (templates, pseudo-code, deliberately broken examples), use `<!-- sqltest: skip -->` instead. Undecorated blocks are ignored.
+
+**Running locally.** You need gcloud Application Default Credentials and a default project (queries are dry-run only, so any project with the BigQuery API enabled works):
+
+```bash
+gcloud auth application-default login
+npm run test:queries                      # all decorated blocks, all articles
+npm run test:queries -- --file tcpinfo    # one article (filename substring)
+npm run test:queries -- --all             # every ```sql block, decorated or not
+```
+
+Each block reports pass/fail with its file, line number, and estimated bytes the query would scan. Without credentials the script skips with a warning and exits 0, so it never blocks contributors or builds.
+
+**In CI.** `.github/workflows/query-tests.yml` runs the decorated-block validation on any PR touching `src/content/articles/`. It authenticates via Workload Identity Federation, exchanging the workflow's GitHub OIDC token for short-lived credentials of the `kb-query-tests` service account in the `measurement-lab` project — no stored keys or repository secrets. PRs from forks can't mint OIDC tokens, so the job skips for them instead of failing.
+
 ## Deploy to GitHub Pages
 
 1. Push to GitHub

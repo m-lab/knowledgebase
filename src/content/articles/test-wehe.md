@@ -57,7 +57,9 @@ Raw WeHe data is available at:
 
 **Find tests where differentiation was detected on cellular networks (last 7 days):**
 
+<!-- sqltest -->
 ```sql
+-- Find tests where differentiation was detected on cellular networks
 WITH info AS (
   SELECT raw.*
   FROM `measurement-lab.wehe_raw.replayInfo1`
@@ -83,7 +85,9 @@ LIMIT 1000
 
 **Count tests and differentiation detections per carrier (last 7 days):**
 
+<!-- sqltest -->
 ```sql
+-- Count tests and differentiation detections per carrier 
 WITH info AS (
   SELECT raw.*
   FROM `measurement-lab.wehe_raw.replayInfo1`
