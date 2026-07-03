@@ -93,7 +93,7 @@ npm run test:queries -- --all             # every ```sql block, decorated or not
 
 Each block reports pass/fail with its file, line number, and estimated bytes the query would scan. Without credentials the script skips with a warning and exits 0, so it never blocks contributors or builds.
 
-**In CI.** `.github/workflows/query-tests.yml` runs the decorated-block validation on any PR touching `src/content/articles/`. It authenticates with the `GCP_SA_KEY` repository secret (a service-account JSON key needing only `roles/bigquery.jobUser` on its own project plus read access to the `measurement-lab` datasets). When the secret is unavailable — e.g. PRs from forks — the job skips instead of failing.
+**In CI.** `.github/workflows/query-tests.yml` runs the decorated-block validation on any PR touching `src/content/articles/`. It authenticates via Workload Identity Federation, exchanging the workflow's GitHub OIDC token for short-lived credentials of the `kb-query-tests` service account in the `measurement-lab` project — no stored keys or repository secrets. PRs from forks can't mint OIDC tokens, so the job skips for them instead of failing.
 
 ## Deploy to GitHub Pages
 
