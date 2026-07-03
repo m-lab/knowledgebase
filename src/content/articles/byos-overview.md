@@ -76,13 +76,14 @@ Measurements from BYOS nodes flow through M-Lab's standard data pipeline:
 - Data is processed and published to BigQuery within ~24 hours
 - You can filter for your node's data using the `server.Site` field in BigQuery:
 
+<!-- sqltest -->
 ```sql
+-- Query a specific site-id for BYOS test data
 SELECT a.TestTime, a.MeanThroughputMbps, client.Network.ASName
 FROM `measurement-lab.ndt.ndt7`
 WHERE server.Site = 'your-site-id'
-  AND DATE(a.TestTime) >= DATE_SUB(CURRENT_DATE(), INTERVAL 7 DAY)
+  AND date >= DATE_SUB(CURRENT_DATE(), INTERVAL 7 DAY)
 ORDER BY a.TestTime DESC
-LIMIT 50
 ```
 
 ## Monitoring Your Node

@@ -45,7 +45,9 @@ For exploratory analysis and visualization without writing SQL, the [M-Lab Obser
 
 ### ISP Performance Comparison
 
+<!-- sqltest -->
 ```sql
+-- ISP Performance Comparison
 SELECT
   client.Network.ASName                          AS isp,
   ROUND(APPROX_QUANTILES(a.MeanThroughputMbps, 100)[OFFSET(50)], 2)
@@ -54,24 +56,25 @@ SELECT
                                                   AS median_rtt_ms,
   COUNT(*)                                        AS test_count
 FROM `measurement-lab.ndt.ndt7`
-WHERE DATE(a.TestTime) BETWEEN '2024-01-01' AND '2024-03-31'
+WHERE date BETWEEN '2024-01-01' AND '2024-03-31'
   AND client.Geo.CountryCode = 'US'
   AND a.MeanThroughputMbps > 0
 GROUP BY isp
 HAVING test_count > 10000
 ORDER BY median_download_mbps DESC
-LIMIT 25
 ```
 
 ### Geographic Coverage Analysis
 
+<!-- sqltest -->
 ```sql
+-- Geographic coverage analysis
 SELECT
   client.Geo.Region       AS region,
   COUNT(*)                AS test_count,
   ROUND(AVG(a.MeanThroughputMbps), 2) AS avg_mbps
 FROM `measurement-lab.ndt.ndt7`
-WHERE DATE(a.TestTime) BETWEEN '2024-01-01' AND '2024-12-31'
+WHERE date BETWEEN '2024-01-01' AND '2024-12-31'
   AND client.Geo.CountryCode = 'US'
 GROUP BY region
 ORDER BY test_count DESC
@@ -79,13 +82,15 @@ ORDER BY test_count DESC
 
 ### Temporal Trend Analysis
 
+<!-- sqltest -->
 ```sql
+-- Temporal trend analysis 
 SELECT
   DATE_TRUNC(DATE(a.TestTime), MONTH)            AS month,
   ROUND(APPROX_QUANTILES(a.MeanThroughputMbps, 100)[OFFSET(50)], 2)
                                                   AS median_mbps
 FROM `measurement-lab.ndt.ndt7`
-WHERE DATE(a.TestTime) BETWEEN '2020-01-01' AND '2024-12-31'
+WHERE date BETWEEN '2020-01-01' AND '2024-12-31'
   AND client.Network.ASNumber = 7922            -- Comcast as example
   AND a.MeanThroughputMbps > 0
 GROUP BY month

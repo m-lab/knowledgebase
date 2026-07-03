@@ -58,13 +58,15 @@ For most use cases, start with `measurement-lab.ndt.ndt7_union`.
 
 Average download speed by country for the last 30 days:
 
+<!-- sqltest -->
 ```sql
+-- Average download speed by country for the last 30 days
 SELECT
   client.Geo.CountryCode                     AS country,
   ROUND(AVG(a.MeanThroughputMbps), 2)       AS avg_download_mbps,
   COUNT(*)                                   AS test_count
-FROM `measurement-lab.ndt.ndt7_union`
-WHERE DATE(a.TestTime) >= DATE_SUB(CURRENT_DATE(), INTERVAL 30 DAY)
+FROM `measurement-lab.ndt.ndt7`
+WHERE date >= DATE_SUB(CURRENT_DATE(), INTERVAL 30 DAY)
   AND a.MeanThroughputMbps > 0
   AND a.MeanThroughputMbps < 10000   -- exclude outliers
 GROUP BY country
@@ -129,7 +131,9 @@ Use the **preview** feature in the BigQuery UI to inspect data before running qu
 
 For larger analyses, export to Google Cloud Storage rather than downloading from BigQuery:
 
+<!-- sqltest -->
 ```sql
+-- Export example
 EXPORT DATA
   OPTIONS (
     uri = 'gs://your-bucket/ndt7-export-*.csv',
@@ -138,8 +142,8 @@ EXPORT DATA
   )
 AS (
   SELECT a.TestTime, a.MeanThroughputMbps, client.Geo.CountryCode
-  FROM `measurement-lab.ndt.ndt7_union`
-  WHERE DATE(a.TestTime) = '2024-06-01'
+  FROM `measurement-lab.ndt.ndt7`
+  WHERE date = '2024-06-01'
 );
 ```
 

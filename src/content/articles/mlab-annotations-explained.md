@@ -61,15 +61,16 @@ M-Lab’s built-in geolocation is appropriate for coarse spatial summaries, but 
 
 M-Lab uses ISO 3166-2 codes for subdivisions such as states and provinces:
 
+<!-- sqltest -->
 ```sql
 -- US state-level analysis
 SELECT
   client.Geo.Region AS state_code,
   COUNT(*) AS tests,
   ROUND(AVG(a.MeanThroughputMbps), 2) AS avg_mbps
-FROM `measurement-lab.ndt.ndt7_union`
+FROM `measurement-lab.ndt.ndt7`
 WHERE client.Geo.CountryCode = 'US'
-  AND DATE(a.TestTime) BETWEEN '2024-01-01' AND '2024-12-31'
+  AND date BETWEEN '2024-01-01' AND '2024-12-31'
 GROUP BY state_code
 ORDER BY tests DESC;
 ### Improving Spatial Precision
@@ -93,6 +94,7 @@ IP-to-AS mappings are derived from routing data and can be affected by route vis
 
 The accompanying `ASName` field provides a human-readable name for that ASN. This name is useful for display and interpretation, but it should not be treated as a stable identifier. For ISP comparisons, prefer `ASNumber` over `ASName`. AS names can change due to mergers and rebranding, whereas ASNs are more stable identifiers. Even so, some organizations operate multiple ASNs, and some ASNs contain multiple brands or customer populations. 
 
+<!-- sqltest -->
 ```sql
 -- Top ISPs by test volume in a country
 SELECT
@@ -100,9 +102,9 @@ SELECT
   MAX(client.Network.ASName) AS isp_name,   -- stable within ASN
   COUNT(*) AS test_count,
   ROUND(APPROX_QUANTILES(a.MeanThroughputMbps, 100)[OFFSET(50)], 2) AS median_mbps
-FROM `measurement-lab.ndt.ndt7_union`
+FROM `measurement-lab.ndt.ndt7`
 WHERE client.Geo.CountryCode = 'BR'
-  AND DATE(a.TestTime) BETWEEN '2024-01-01' AND '2024-03-31'
+  AND date BETWEEN '2024-01-01' AND '2024-03-31'
 GROUP BY asn
 HAVING test_count > 1000
 ORDER BY test_count DESC
