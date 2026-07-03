@@ -148,7 +148,7 @@ for (const b of blocks) {
   }
   try {
     const bytes = await dryRun(b.sql);
-    console.log(`    ${green}✓${reset}${dim}:${b.line}${reset}  ${b.label} ${dim}(${fmtBytes(bytes)} scanned)${reset}`);
+    console.log(`    ${green}✓${reset}${dim}:${b.line}${reset}  ${b.label} ${dim}(would scan ${fmtBytes(bytes)} if run — dry run is free)${reset}`);
   } catch (err) {
     failed++;
     console.log(`    ${red}✗${reset}${dim}:${b.line}${reset}  ${b.label}`);
