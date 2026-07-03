@@ -31,6 +31,25 @@ That's it — the article appears on the home page automatically.
 
 **To customize branding**, edit `src/config.ts` — change the site title, tagline, colors, and navigation.
 
+## Tracking open items (TODO / FIXME)
+
+Articles can carry inline work-in-progress markers as HTML comments — invisible on the published site, but tracked in source:
+
+```html
+<!-- TODO: Add worked example of computing per-connection jitter. -->
+<!-- FIXME: Verify these column paths against the current schema. -->
+```
+
+Use `TODO` for missing content or follow-ups, and `FIXME` for things believed wrong or unverified in the text as published.
+
+List every open item across all articles with:
+
+```bash
+npm run todo
+```
+
+This prints each marker grouped by severity (FIXME first) and file, with line numbers, and exits cleanly when none remain. Run it before releases or when picking up editorial work to see what's outstanding. Markers are only detected in `src/content/articles/*.md(x)`, one per line.
+
 ## Front matter
 
 | Field | Type | Description |
