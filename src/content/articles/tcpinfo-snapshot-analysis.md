@@ -198,13 +198,12 @@ For analyses requiring the full 10 ms resolution, the complete unthinned snapsho
 gs://archive-measurement-lab/ndt/tcpinfo/YYYY/MM/DD/
 ```
 
-Files are stored in `.zst`-compressed JSONL format. Pavlos Sermpezis has a [Colab notebook](https://colab.research.google.com/) for snapshot-level analysis — ask on the M-Lab Discuss list or Slack for the current link.
+Files are stored in `.zst`-compressed JSONL format. 
 
-<!-- TODO: Add direct link to Pavlos' TCPinfo Colab notebook once it has a stable public URL. -->
+
 <!-- TODO: Add section on unnesting the raw.Snapshots array in BigQuery for within-connection time series analysis. -->
 <!-- FIXME: Verify that the RTT/RTTVar fields cited above match the current ndt.tcpinfo schema exactly — column paths may differ between the ndt.tcpinfo view and raw tables. -->
 <!-- TODO: Add worked example of computing per-connection jitter from the Snapshots array (UNNEST + window functions). -->
-<!-- TODO: Link to Scott Jordan meeting notes and FCC VoIP proceeding context once those are public. -->
 
 ## Further Reading
 
