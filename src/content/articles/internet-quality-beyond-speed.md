@@ -37,7 +37,7 @@ In M-Lab NDT7 data:
 SELECT
   a.MinRTT,         -- best-case (unloaded) latency in ms
   a.MeanThroughputMbps
-FROM `measurement-lab.ndt.ndt7`
+FROM `measurement-lab.ndt.ndt7_union`
 WHERE date = '2024-06-01'
 ```
 

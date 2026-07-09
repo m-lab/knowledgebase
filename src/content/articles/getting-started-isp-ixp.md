@@ -37,7 +37,7 @@ SELECT
   ROUND(APPROX_QUANTILES(a.MeanThroughputMbps, 100)[OFFSET(50)], 2) AS median_download_mbps,
   ROUND(APPROX_QUANTILES(a.MinRTT, 100)[OFFSET(50)], 2)             AS median_rtt_ms,
   COUNT(*) AS test_count
-FROM `measurement-lab.ndt.ndt7`
+FROM `measurement-lab.ndt.ndt7_union`
 WHERE date >= DATE_SUB(CURRENT_DATE(), INTERVAL 30 DAY)
   AND client.Network.ASNumber = 12345
   AND a.MeanThroughputMbps > 0

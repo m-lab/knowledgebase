@@ -55,7 +55,7 @@ SELECT
   ROUND(APPROX_QUANTILES(a.MinRTT, 100)[OFFSET(50)], 2)
                                                   AS median_rtt_ms,
   COUNT(*)                                        AS test_count
-FROM `measurement-lab.ndt.ndt7`
+FROM `measurement-lab.ndt.ndt7_union`
 WHERE date BETWEEN '2024-01-01' AND '2024-03-31'
   AND client.Geo.CountryCode = 'US'
   AND a.MeanThroughputMbps > 0
@@ -73,7 +73,7 @@ SELECT
   client.Geo.Region       AS region,
   COUNT(*)                AS test_count,
   ROUND(AVG(a.MeanThroughputMbps), 2) AS avg_mbps
-FROM `measurement-lab.ndt.ndt7`
+FROM `measurement-lab.ndt.ndt7_union`
 WHERE date BETWEEN '2024-01-01' AND '2024-12-31'
   AND client.Geo.CountryCode = 'US'
 GROUP BY region
@@ -89,7 +89,7 @@ SELECT
   DATE_TRUNC(DATE(a.TestTime), MONTH)            AS month,
   ROUND(APPROX_QUANTILES(a.MeanThroughputMbps, 100)[OFFSET(50)], 2)
                                                   AS median_mbps
-FROM `measurement-lab.ndt.ndt7`
+FROM `measurement-lab.ndt.ndt7_union`
 WHERE date BETWEEN '2020-01-01' AND '2024-12-31'
   AND client.Network.ASNumber = 7922            -- Comcast as example
   AND a.MeanThroughputMbps > 0

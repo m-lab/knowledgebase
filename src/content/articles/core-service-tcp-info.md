@@ -55,7 +55,7 @@ SELECT
   ndt.client.Geo.CountryCode,
   tcpinfo.a.FinalSnapshot.tcpinfo.MinRTT,
   tcpinfo.a.FinalSnapshot.tcpinfo.SndCwnd
-FROM `measurement-lab.ndt.ndt7` AS ndt
+FROM `measurement-lab.ndt.ndt7_union` AS ndt
 JOIN `measurement-lab.ndt.tcpinfo` AS tcpinfo
   ON ndt.id = tcpinfo.id
 WHERE ndt.date = '2024-06-01' and tcpinfo.date = '2024-06-01'

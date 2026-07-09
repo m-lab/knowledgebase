@@ -80,7 +80,7 @@ Measurements from BYOS nodes flow through M-Lab's standard data pipeline:
 ```sql
 -- Query a specific site-id for BYOS test data
 SELECT a.TestTime, a.MeanThroughputMbps, client.Network.ASName
-FROM `measurement-lab.ndt.ndt7`
+FROM `measurement-lab.ndt.ndt7_union`
 WHERE server.Site = 'your-site-id'
   AND date >= DATE_SUB(CURRENT_DATE(), INTERVAL 7 DAY)
 ORDER BY a.TestTime DESC

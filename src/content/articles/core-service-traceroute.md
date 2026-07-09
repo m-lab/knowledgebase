@@ -78,7 +78,7 @@ SELECT
   ndt.a.MeanThroughputMbps,
   ndt.client.Geo.CountryCode,
   tr.raw.Tracelb.Dst AS traceroute_destination
-FROM `measurement-lab.ndt.ndt7` AS ndt
+FROM `measurement-lab.ndt.ndt7_union` AS ndt
 JOIN `measurement-lab.ndt_raw.scamper1` AS tr
   ON ndt.id = tr.id
 WHERE ndt.date = '2024-06-01' and tr.date = '2024-06-01'
@@ -90,17 +90,18 @@ WHERE ndt.date = '2024-06-01' and tr.date = '2024-06-01'
 ```sql
 -- Extract individual hops
 SELECT
-  a.StartTime,
-  a.Source.IP   AS server_ip,
-  a.Destination AS client_ip,
-  hop.Addr      AS hop_ip,
-  hop.TTL,
-  rtt.RTT       AS hop_rtt_ms
+  TIMESTAMP_SECONDS(raw.Tracelb.start.Sec) AS start_time,
+  raw.Tracelb.src AS server_ip,
+  raw.Tracelb.dst AS client_ip,
+  hop.addr        AS hop_ip,
+  probe.TTL,
+  rtt.RTT         AS hop_rtt_ms
 FROM `measurement-lab.ndt_raw.scamper1`,
-  UNNEST(raw.Tracelb.Nodes) AS hop,
-  UNNEST(raw.Tracelb.nodes.Links) AS link,
-  UNNEST(link.links.Probes) AS probe,
-  UNNEST(link.links.Probes.Replies) AS rtt
+  UNNEST(raw.Tracelb.nodes) AS hop,
+  UNNEST(hop.links) AS linkgroup,
+  UNNEST(linkgroup.Links) AS link,
+  UNNEST(link.Probes) AS probe,
+  UNNEST(probe.Replies) AS rtt
 WHERE date = '2024-01-15'
 LIMIT 100
 ```
