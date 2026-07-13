@@ -106,10 +106,18 @@ The filename becomes the URL slug.
 Use fenced code blocks with language hints:
 
 ```sql
--- BigQuery SQL
-SELECT ...
-FROM `measurement-lab.ndt.ndt7_union`
-WHERE DATE(a.TestTime) >= DATE_SUB(CURRENT_DATE(), INTERVAL 30 DAY)
+-- Example BigQuery SQL
+-- Average download speed by country over past 30-days
+SELECT
+  client.Geo.CountryCode AS country,
+  ROUND(AVG(a.MeanThroughputMbps), 2) AS avg_download_mbps,
+  COUNT(*) AS test_count
+FROM `measurement-lab.ndt.ndt7`
+WHERE date >= DATE_SUB(CURRENT_DATE(), INTERVAL 30 DAY)
+  AND a.MeanThroughputMbps > 0
+  AND a.MeanThroughputMbps < 10000
+GROUP BY country
+ORDER BY avg_download_mbps DESC
 ```
 
 ```bash
