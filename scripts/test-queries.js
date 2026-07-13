@@ -78,7 +78,23 @@ const allBlocks = files.flatMap((f) =>
 const blocks = allBlocks.filter((b) =>
   b.ann === 'skip' ? false : testAll ? true : b.ann !== null
 );
-const undecorated = allBlocks.length - blocks.length;
+const skipped = allBlocks.filter((b) => !blocks.includes(b));
+const undecorated = skipped.length;
+
+function printSkipped() {
+  if (skipped.length === 0) return;
+  console.log(`${bold}Skipped${reset}`);
+  let lastFile = null;
+  for (const b of skipped) {
+    if (b.file !== lastFile) {
+      console.log(`  ${cyan}${b.file}${reset}`);
+      lastFile = b.file;
+    }
+    const reason = b.ann === 'skip' ? 'sqltest: skip' : 'undecorated';
+    console.log(`    ${yellow}-${reset}${dim}:${b.line}${reset}  ${b.label} ${dim}(${reason})${reset}`);
+  }
+  console.log();
+}
 
 if (blocks.length === 0) {
   console.log(
@@ -86,6 +102,7 @@ if (blocks.length === 0) {
       (undecorated ? ` (${undecorated} undecorated — add <!-- sqltest --> or pass --all)` : '') +
       '.'
   );
+  printSkipped();
   process.exit(0);
 }
 
@@ -161,9 +178,12 @@ for (const b of blocks) {
   }
 }
 
+console.log();
+printSkipped();
+
 const passed = blocks.length - failed;
 console.log(
-  `\n${bold}${failed ? red : green}${passed} passed${reset}${dim}, ${failed} failed` +
+  `${bold}${failed ? red : green}${passed} passed${reset}${dim}, ${failed} failed` +
     (undecorated ? `, ${undecorated} undecorated/skipped` : '') +
     reset
 );
