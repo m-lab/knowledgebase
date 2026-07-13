@@ -176,7 +176,6 @@ JOIN `measurement-lab.ndt.tcpinfo` AS tcp
 WHERE
     ndt7.date = '2026-06-01'
     AND ndt7.raw.Download.UUID IS NOT NULL
-    AND tcp.raw.Download.UUID IS NOT NULL
     AND ndt7.a.MeanThroughputMbps IS NOT NULL
   -- exclude connections where the kernel never measured RTT:
   -- MinRTT holds the uint32 "unset" sentinel and RTT/RTTVar are defaults
