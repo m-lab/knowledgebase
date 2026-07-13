@@ -24,7 +24,7 @@ The `tcp-info` sidecar runs on every M-Lab server, polling the Linux kernel's `I
 | 32-core / 67 GB (slow batch, e.g. LGA) | ~13 ms | ~25 ms | ~260 ms |
 | 40–56 core | ~11 ms | ~25 ms | ~250+ ms |
 
-For a 10-second NDT download test, a typical site stores about **94 snapshots** (one per ~110 ms). Sites in the slow-hardware batch store about **39 snapshots** per test (~259 ms apart). If you need the full 10 ms resolution it only exists in the raw `.zst` archives on GCS — not in BigQuery.
+For a 10-second NDT download test, a typical site stores about **94 snapshots** (one per ~110 ms). Sites in the slow-hardware batch store about **39 snapshots** per test (~259 ms apart). If you need the full 10 ms resolution it only exists in the raw `.zst` files on GCS — not in BigQuery.
 
 <div class="callout callout--note">
   <span class="callout-icon">ℹ️</span>
@@ -41,7 +41,7 @@ The remaining ~50% of rows are the real NDT connections — but those connection
 
 ## The Correct Pattern: Join by UUID
 
-Every completed NDT test has a UUID (`id`) that appears in both `ndt.ndt7` (or `ndt.ndt5`) and `ndt.tcpinfo`. Joining on `id` and `date` keeps only connections tied to a real test result and discards all scanner/handshake noise.
+Completed NDT tests each have a UUID (`id`) that appears in both `ndt.ndt7` (or `ndt.ndt5`) and `ndt.tcpinfo` tables respectively. Joining on `id` and `date` keeps only connections tied to a real test result and discards all scanner/handshake noise. Note that the `ndt.ndt7` table only contains tests from M-Lab manages servers, NOT Host-Managed (BYOS servers), tcpinfo tests do not run on Host-Managed servers, thus we join with the `ndt7` table NOT the `ndt7_union` table.
 
 <!-- sqltest -->
 ```sql
@@ -72,7 +72,9 @@ LIMIT 10
 
 <div class="callout callout--warn">
   <span class="callout-icon">⚠️</span>
-  <div class="callout-body">Always filter by <code>DATE(ndt7.a.TestTime)</code> or <code>ndt7.date</code> to use partition pruning. Filtering by both <code>ndt7.date</code> and <code>tcp.date</code> in the JOIN is especially important — it prevents a full cross-partition scan on the tcpinfo table.</div>
+  <div class="callout-body">Always filter by <code>ndt7.date</code> to use partition pruning. BigQuery is configured to present an error if you do not query on <code>ndt7.date</code>.  Filtering by both <code>ndt7.date</code> and <code>tcp.date</code> in the JOIN is especially important — it prevents a full cross-partition scan on the tcpinfo table.
+  <b>Example:</b> <code>Cannot query over table 'mlab-oti.ndt.ndt7' without a filter over column(s) 'date' that can be used for partition elimination</code>
+  </div>
 </div>
 
 ## Snapshot Count Distribution
@@ -85,7 +87,7 @@ To understand the quality of TCPinfo data for a set of tests, it helps to look a
 WITH snapshot_counts AS (
   SELECT
     id,
-    ARRAY_LENGTH(raw.Snapshots) AS num_snapshots
+    (SELECT COUNT(s.Timestamp) FROM UNNEST(raw.Snapshots) AS s) AS num_snapshots
   FROM `measurement-lab.ndt.tcpinfo`
   WHERE
     date = '2026-06-01'
@@ -151,7 +153,7 @@ TCPinfo's `RTTVar` field (kernel RTTVAR, in microseconds) provides a per-connect
 
 <div class="callout callout--note">
   <span class="callout-icon">ℹ️</span>
-  <div class="callout-body"><strong>Sampling density caveat.</strong> At most sites, BigQuery snapshots are ~110 ms apart; at LGA-class sites, ~260 ms apart. This is sufficient for characterizing latency distributions across many tests, but may be too coarse for sub-100 ms jitter analysis within a single connection. For sub-100 ms resolution, the full snapshot data is available in the raw <code>.zst</code> archives on GCS.</div>
+  <div class="callout-body"><strong>Sampling density caveat.</strong> At most sites, BigQuery snapshots are ~110 ms apart; at LGA-class sites, ~260 ms apart. This is sufficient for characterizing latency distributions across many tests, but may be too coarse for sub-100 ms jitter analysis within a single connection. For sub-100 ms resolution, the full snapshot data is available in the raw <code>.zst</code> files on GCS.</div>
 </div>
 
 <!-- sqltest -->
@@ -167,13 +169,18 @@ SELECT
       2
     )                                                          AS p95_rtt_ms,
     ROUND(AVG(tcp.a.FinalSnapshot.TCPInfo.RTTVar) / 1000, 2) AS avg_rttvar_ms
-FROM `measurement-lab.ndt.ndt7` AS ndt7
+FROM `measurement-lab.ndt.ndt7_union` AS ndt7
 JOIN `measurement-lab.ndt.tcpinfo` AS tcp
   ON  ndt7.id   = tcp.id
   AND ndt7.date = tcp.date
 WHERE
     ndt7.date = '2026-06-01'
+    AND raw.Download.UUID IS NOT NULL 
     AND ndt7.a.MeanThroughputMbps IS NOT NULL
+  -- exclude connections where the kernel never measured RTT:
+  -- MinRTT holds the uint32 "unset" sentinel and RTT/RTTVar are defaults
+    AND tcp.a.FinalSnapshot.TCPInfo.MinRTT < 4294967295
+    AND tcp.a.FinalSnapshot.TCPInfo.RTT > 0
 GROUP BY country, site
 HAVING test_count > 100
 ORDER BY avg_min_rtt_ms
@@ -198,10 +205,6 @@ gs://archive-measurement-lab/ndt/tcpinfo/YYYY/MM/DD/
 
 Each day's directory contains `.tgz` tarballs (one per server, per time window). Inside each tarball are per-connection files in `.jsonl.zst` format — one Zstandard-compressed JSONL file per TCP connection, holding that connection's full snapshot time series. To work with the data, download the tarball, extract it, then decompress individual connection files with `zstd -d` (or read them directly with a library that supports streaming Zstandard).
 
-
-<!-- TODO: Add section on unnesting the raw.Snapshots array in BigQuery for within-connection time series analysis. -->
-<!-- FIXME: Verify that the RTT/RTTVar fields cited above match the current ndt.tcpinfo schema exactly — column paths may differ between the ndt.tcpinfo view and raw tables. -->
-<!-- TODO: Add worked example of computing per-connection jitter from the Snapshots array (UNNEST + window functions). -->
 
 ## Further Reading
 
