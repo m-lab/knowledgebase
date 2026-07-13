@@ -65,7 +65,7 @@ SELECT
   client.Geo.CountryCode                     AS country,
   ROUND(AVG(a.MeanThroughputMbps), 2)       AS avg_download_mbps,
   COUNT(*)                                   AS test_count
-FROM `measurement-lab.ndt.ndt7`
+FROM `measurement-lab.ndt.ndt7_union`
 WHERE date >= DATE_SUB(CURRENT_DATE(), INTERVAL 30 DAY)
   AND a.MeanThroughputMbps > 0
   AND a.MeanThroughputMbps < 10000   -- exclude outliers
@@ -142,7 +142,7 @@ EXPORT DATA
   )
 AS (
   SELECT a.TestTime, a.MeanThroughputMbps, client.Geo.CountryCode
-  FROM `measurement-lab.ndt.ndt7`
+  FROM `measurement-lab.ndt.ndt7_union`
   WHERE date = '2024-06-01'
 );
 ```

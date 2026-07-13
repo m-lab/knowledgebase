@@ -78,7 +78,7 @@ The primary table is `measurement-lab.revtr_raw.revtr1`. Additional supporting t
 
 <!-- sqltest -->
 ```sql
--- High quality reveres paths only
+-- High quality reverse paths only
 SELECT date, raw
 FROM `measurement-lab.revtr_raw.revtr1`
 WHERE DATE(date) = '2024-06-01'
