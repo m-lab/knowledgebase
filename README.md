@@ -59,6 +59,20 @@ This prints each marker grouped by severity (FIXME first) and file, with line nu
 | `tags` | string[] | Tag names from `src/data/tags.ts` |
 | `difficulty` | string | `beginner` \| `intermediate` \| `advanced` |
 | `standalone` | boolean | `true` hides the article from index/tags/search |
+| `published` | boolean | `false` excludes the article from the built site entirely. Defaults to `true` |
+
+### Publishing status
+
+Every article is published by default. To keep a draft out of the built site, add `published: false` to its front matter:
+
+```markdown
+---
+title: Work in Progress Article
+published: false
+---
+```
+
+An unpublished article won't get a page, and won't appear in the index, tags, search, or `article-index.txt` — but it still lives in `src/content/articles/` so work can continue on it in draft form. Remove the field (or set it to `true`) when the article is ready to go live.
 
 ## Callout boxes
 

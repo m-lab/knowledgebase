@@ -1,5 +1,6 @@
 import type { APIRoute } from 'astro';
 import { getCollection } from 'astro:content';
+import { isListed } from '../utils';
 
 /**
  * GET /article-index
@@ -9,7 +10,7 @@ import { getCollection } from 'astro:content';
  * title, tags, difficulty, and description for each article.
  */
 export const GET: APIRoute = async () => {
-  const all = await getCollection('articles', ({ data }) => !data.standalone);
+  const all = await getCollection('articles', ({ data }) => isListed(data));
 
   // Sort: starters first (by order), then alphabetically by title
   all.sort((a, b) => {
