@@ -2,12 +2,12 @@
 import Base from '../../layouts/Base.astro';
 import { getCollection } from 'astro:content';
 import { TAGS, getTagByName } from '../../data/tags';
-import { url } from '../../utils';
+import { url, isListed } from '../../utils';
 
 function slug(id: string) { return id.replace(/\.mdx?$/, ''); }
 
 export async function getStaticPaths() {
-  const allArticles = await getCollection('articles', ({ data }) => !data.standalone);
+  const allArticles = await getCollection('articles', ({ data }) => isListed(data));
   return TAGS.map(tag => ({
     params: { tag: tag.name },
     props: {

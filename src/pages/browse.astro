@@ -3,10 +3,10 @@ import Base from '../layouts/Base.astro';
 import SearchAndFilter from '../components/SearchAndFilter.svelte';
 import { getCollection } from 'astro:content';
 import { SITE } from '../config';
-import { url } from '../utils';
+import { url, isListed } from '../utils';
 import { TAGS, getTagByName } from '../data/tags';
 
-const allArticles = await getCollection('articles', ({ data }) => !data.standalone);
+const allArticles = await getCollection('articles', ({ data }) => isListed(data));
 const articles = allArticles.sort((a, b) => {
   if (a.data.date && b.data.date) return b.data.date.getTime() - a.data.date.getTime();
   return a.data.title.localeCompare(b.data.title);

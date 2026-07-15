@@ -2,11 +2,11 @@
 import Base from '../../layouts/Base.astro';
 import { getCollection } from 'astro:content';
 import { TAGS, getTagByName } from '../../data/tags';
-import { url } from '../../utils';
+import { url, isListed } from '../../utils';
 
 function slug(id: string) { return id.replace(/\.mdx?$/, ''); }
 
-const allArticles = await getCollection('articles', ({ data }) => !data.standalone);
+const allArticles = await getCollection('articles', ({ data }) => isListed(data));
 
 const tagMap = new Map<string, typeof allArticles>();
 for (const article of allArticles) {

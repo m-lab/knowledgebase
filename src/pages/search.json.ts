@@ -1,5 +1,6 @@
 import type { APIRoute } from 'astro';
 import { getCollection } from 'astro:content';
+import { isListed } from '../utils';
 
 /**
  * Strip markdown syntax from article body text so the lunr index contains
@@ -29,7 +30,7 @@ export function stripMarkdown(body: string): string {
 }
 
 export const GET: APIRoute = async () => {
-  const articles = await getCollection('articles', ({ data }) => !data.standalone);
+  const articles = await getCollection('articles', ({ data }) => isListed(data));
 
   const base = import.meta.env.BASE_URL.replace(/\/$/, '');
   const index = articles.map(article => ({
