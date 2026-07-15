@@ -4,6 +4,7 @@ description: A guide for digital rights advocates, community broadband organizer
 tags: [getting-started, advocacy, internet-quality, net-neutrality]
 difficulty: beginner
 starter: true
+published: false
 ---
 
 M-Lab data is a powerful resource for internet advocacy — it's open, independently verifiable, and produced at a scale that individual communities or organizations cannot replicate on their own. This guide is for advocates, organizers, civil society researchers, and journalists who want to use M-Lab data to document ISP behavior, support communities, and build evidence-based arguments.

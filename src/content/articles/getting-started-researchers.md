@@ -4,6 +4,7 @@ description: A curated starting path for academic researchers and data scientist
 tags: [getting-started, research, data-access]
 difficulty: beginner
 starter: true
+published: false
 ---
 
 M-Lab's open datasets have been used in hundreds of peer-reviewed publications, government reports, and conference papers. This guide maps out the most useful resources for researchers coming to M-Lab for the first time, or looking to go deeper.

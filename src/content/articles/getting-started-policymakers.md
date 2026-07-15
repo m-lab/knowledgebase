@@ -4,6 +4,7 @@ description: A guide for policymakers, regulators, and government staff who want
 tags: [getting-started, policy, internet-quality]
 difficulty: beginner
 starter: true
+published: false
 ---
 
 M-Lab data has informed broadband policy at the national and international level — from FCC proceedings in the United States to regulatory filings across Europe, Latin America, and Asia. This guide points policymakers, regulators, and their research staff toward the resources most relevant to their work.
@@ -87,5 +88,3 @@ All M-Lab tests collect the user's IP address alongside measurement results, whi
 
 M-Lab regularly engages with policymakers and regulators. For inquiries about specific policy applications, data interpretation, or testimony support, contact [support@measurementlab.net](mailto:support@measurementlab.net).
 
-<!-- FIXME: Add link to "Using M-Lab Data for Broadband Mapping and Program Evaluation" article once created. -->
-<!-- FIXME: Add link to "Understanding ISP Performance Comparisons in M-Lab Data" article once created. -->

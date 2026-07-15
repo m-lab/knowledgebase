@@ -3,6 +3,7 @@ title: "NDT (Network Diagnostic Tool)"
 description: NDT is M-Lab's flagship speed test — it measures single-stream download and upload throughput, latency, and provides TCP-level diagnostics for every test.
 tags: [tests, data-access, bigquery, speed-test]
 difficulty: beginner
+published: false
 ---
 
 NDT (Network Diagnostic Tool) is M-Lab's most widely used measurement test. It measures a connection's capacity for "bulk transport" — what most people know as download and upload speed — and records detailed TCP statistics that allow researchers to diagnose what is limiting performance. NDT has been hosted on M-Lab since the platform's founding in 2009 and is the backbone of [speed.measurementlab.net](https://speed.measurementlab.net).

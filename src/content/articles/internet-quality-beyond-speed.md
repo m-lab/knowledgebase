@@ -3,6 +3,7 @@ title: "Beyond Speed: Understanding Internet Quality Metrics"
 description: Why download speed alone is an incomplete picture of internet performance, and how M-Lab measures latency, packet loss, and working internet quality.
 tags: [internet-quality, measurement]
 difficulty: beginner
+published: false
 ---
 
 "How fast is your internet?" is the wrong question. Speed is one dimension of a multi-dimensional problem. M-Lab and the broader internet measurement community have been developing richer frameworks for understanding what makes an internet connection work well — or not.

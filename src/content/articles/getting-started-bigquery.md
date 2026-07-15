@@ -3,6 +3,7 @@ title: "Getting Started with M-Lab Data in BigQuery"
 description: How to get free access to M-Lab's BigQuery datasets, run your first queries, understand the data structure, and work efficiently with large tables.
 tags: [data-access, bigquery]
 difficulty: beginner
+published: false
 ---
 
 M-Lab publishes all measurement data to Google BigQuery as a free, open dataset. Access is sponsored by M-Lab — queries against the `measurement-lab` project don't come out of your own GCP quota — but you must join the M-Lab Discuss group first to activate that sponsorship. **Saving query results to your own BigQuery tables, or running queries billed to your own project, will incur charges to you.**

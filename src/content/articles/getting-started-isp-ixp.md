@@ -4,6 +4,7 @@ description: A guide for ISP engineers, network operators, and IXP staff who wan
 tags: [getting-started, node-operations, data-access, network-operations]
 difficulty: intermediate
 starter: true
+published: false
 ---
 
 M-Lab sits at the intersection of your network and the public internet, running standardized tests from measurement points at internet exchange facilities worldwide. For ISPs and IXPs, M-Lab data offers a window into how your customers experience your network — and hosting a node puts that measurement capacity directly in your infrastructure.
@@ -102,5 +103,3 @@ WeHe is a **client-initiated** test run by end users, not by network operators. 
 - Email [support@measurementlab.net](mailto:support@measurementlab.net) for questions about BYOS, your network's data, or technical issues
 - The [M-Lab Discuss group](https://groups.google.com/a/measurementlab.net/g/discuss) is the primary community forum and is required for free BigQuery access
 
-<!-- FIXME: Add link to "Interpreting M-Lab NDT Results for ISP Network Diagnostics" article once created. -->
-<!-- FIXME: Add link to "Comparing M-Lab Performance Before and After Network Changes" article once created. -->
