@@ -3,6 +3,7 @@ title: "FAQ: Checking Node Probability and Status"
 description: How to use the M-Lab Locate Service API to verify your node's probability setting and registration status.
 tags: [node-operations]
 difficulty: beginner
+published: false
 ---
 
 **Q: How can I verify my node's current probability setting and registration status?**
