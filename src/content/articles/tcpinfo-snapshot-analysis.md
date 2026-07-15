@@ -3,6 +3,7 @@ title: "Analyzing TCP INFO Snapshots: Data Characteristics and Research Patterns
 description: A practical guide to M-Lab's TCP INFO snapshot data in BigQuery — how snapshots are collected and thinned, why most rows are noise, how to filter to real tests, and how to use RTT variance data to study latency-sensitive applications like VoIP.
 tags: [research, data-access]
 difficulty: intermediate
+published: false
 ---
 
 M-Lab's TCP INFO sidecar records a time series of kernel TCP socket statistics for every connection on the platform. The BigQuery table is large, heterogeneous, and counterintuitive until you understand how collection and storage work. This article explains the mechanics, the quirks, and the correct patterns for research use.
