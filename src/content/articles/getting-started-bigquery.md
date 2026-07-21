@@ -44,38 +44,28 @@ BigQuery's `bq` command-line tool is now available and queries against `measurem
 
 If you need to query from an application using a service account (`@developer.gserviceaccount.com`), email [support@measurementlab.net](mailto:support@measurementlab.net) so M-Lab can add it to M-Lab Discuss manually. Ensure the account has the **BigQuery User**, **BigQuery Job User**, and **BigQuery Data Viewer** IAM roles on the `measurement-lab` project.
 
-## Key Datasets
-
-| Dataset | Description |
-|---------|-------------|
-| `ndt` | NDT speed tests — use `ndt7_union` for general analysis |
-| `ndt_raw` | Raw NDT archives including traceroute and TCP info |
-| `msak` / `msak_raw` | Multi-stream throughput measurements |
-| `wehe_raw` | App-specific traffic differentiation tests |
-
-For most use cases, start with `measurement-lab.ndt.ndt7_union`.
-
 ## Your First Query
 
-Average download speed by country for the last 30 days:
+For speed test results, you can start with the `measurement-lab.ndt.ndt7_union` table.
+For example, for the average download speed by country for the last 30 days:
 
 <!-- sqltest -->
 ```sql
--- Average download speed by country for the last 30 days
+-- Median download speed by country for a day
 SELECT
   client.Geo.CountryCode                     AS country,
-  ROUND(AVG(a.MeanThroughputMbps), 2)       AS avg_download_mbps,
+  ROUND(APPROX_QUANTILES(a.MeanThroughputMbps, 2)[OFFSET(1)], 2)       AS median_download_mbps,
   COUNT(*)                                   AS test_count
 FROM `measurement-lab.ndt.ndt7_union`
-WHERE date >= DATE_SUB(CURRENT_DATE(), INTERVAL 30 DAY)
+WHERE date = '2024-06-01'
   AND a.MeanThroughputMbps > 0
   AND a.MeanThroughputMbps < 10000   -- exclude outliers
 GROUP BY country
-ORDER BY avg_download_mbps DESC
+ORDER BY median_download_mbps DESC
 LIMIT 20
 ```
 
-## Understanding the Schema
+### Understanding the Schema
 
 NDT7 results have a nested structure. The key top-level fields are:
 
@@ -103,20 +93,9 @@ server.Site             — M-Lab site ID (e.g., "lga01")
 server.Metro            — metro area (e.g., "lga" for New York)
 ```
 
-## Unified Views vs. Raw Tables
-
-M-Lab provides both raw tables and cleaned **unified views**:
-
-- `measurement-lab.ndt.ndt7_union` — **recommended** for most analysis; quality-filtered, includes M-Lab-managed and Host-Managed server data
-- `measurement-lab.ndt.ndt7` — M-Lab-managed servers only
-- `measurement-lab.ndt.ndt7_dynamic` — Host-Managed servers only
-- `measurement-lab.ndt_raw.*` — unfiltered 1-to-1 archives; use only if you need test failures or custom quality logic
-
-The unified views exclude tests shorter than 9 seconds, tests with less than 8 KB transferred, and M-Lab's own monitoring traffic.
-
 ## Query Costs and Partition Pruning
 
-The NDT7 table is large (~5 TB/month of new data). **Always** filter by `DATE(a.TestTime)` to use BigQuery's partition pruning:
+The NDT7 table is large (~0.5 TB/day of new data). **Always** filter by `DATE(a.TestTime)` to use BigQuery's partition pruning:
 
 ```sql
 -- Efficient: uses partition pruning
@@ -126,7 +105,7 @@ WHERE DATE(a.TestTime) = '2024-06-01'
 WHERE a.TestTime > '2024-06-01'
 ```
 
-Use the **preview** feature in the BigQuery UI to inspect data before running queries, and add `LIMIT` clauses during development.
+Use the **preview** feature in the BigQuery UI to inspect data before running queries. The daily query limit per user per day is currently set to 10TiB.
 
 ## Exporting Data
 
@@ -151,8 +130,6 @@ AS (
 ## Further Reading
 
 - [M-Lab BigQuery Schema](https://www.measurementlab.net/data/docs/bq/schema) — full schema documentation
-- [Google BigQuery documentation](https://cloud.google.com/bigquery/what-is-bigquery)
-- [Querying date-partitioned tables](https://cloud.google.com/bigquery/docs/querying-partitioned-tables)
 - [NDT (Network Diagnostic Tool)](../test-ndt) — the primary dataset
 - [Analyzing M-Lab Data: A Researcher's Guide](../research-guide) — ISP comparison patterns and advanced queries
 
