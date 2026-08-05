@@ -13,7 +13,7 @@ Annotations are applied **after** a test completes, during M-Lab's data processi
 
 - **Geographic location** (country, region, city, lat/lon) from MaxMind GeoLite2
 - **Autonomous System Number (ASN)** from RouteViews and CAIDA prefix-to-AS data
-- **ISP name** from MaxMind's ASN database
+- **AS name** from IPinfo's ASN database
 
 This means annotations reflect the state of these databases at the time the test is processed, not necessarily at the time of testing.
 
@@ -42,14 +42,14 @@ client.Geo.AccuracyRadiusKm   — Estimated accuracy radius in km
 
 **Do not use latitude/longitude for fine-grained spatial analysis** Even when coordinates appear precise, the underlying geolocation may only be accurate at city scale. For sub-national analysis, prefer `client.Geo.Region` over point coordinates when state/province-level aggregation is sufficient.
 
-**Rural, mobile, and less-populated areas require particular caution.** Geolocation quality varies substantially by region, ISP, access technology, and address block. Errors are not uniform, so a single global accuracy number can obscure the cases where geolocation is least reliable. Recent measurement work shows that errors can vary by network type and geography: fixed-network IPs may have relatively small median errors, while mobile and Global South prefixes can have much larger errors and higher failure rates ([arXiv:2605.21937](https://arxiv.org/pdf/2605.21937)).
+**Rural, mobile, and less-populated areas require particular caution.** Geolocation quality varies substantially by region, ISP, access technology, and address block. Errors are not uniform, so a single global accuracy number can obscure the cases where geolocation is least reliable. Recent measurement work shows that errors can vary by network type and geography: fixed-network IPs may have relatively small median errors, while mobile and Global South prefixes can have much larger errors and higher failure rates (see, for example, ["Lost in the Prefix: Revisiting IP Geolocation Accuracy Across Networks and Geographies"](https://arxiv.org/pdf/2605.21937)).
 
 ### Improving Spatial Precision
 
 If your analysis requires finer geographic resolution:
 
 1. **Filter by accuracy radius** — use `client.Geo.AccuracyRadiusKm`, but treat it as a confidence signal rather than a guarantee.
-2. **Use M-Lab server-selection metadata to identify likely errors** — M-Lab uses one geolocation system at test time to select a nearby server and another system, MaxMind GeoLite2, to annotate the public dataset. As described in Salamatian and Gill’s M-Lab blog post, researchers can compare the server that actually served the test with the nearest server implied by the published client geolocation. Large inconsistencies between the two can flag potentially incorrect client geolocation. A detailed description is available on [Improving M-Lab Geolocation](https://measurementlab.net/blog/improving-m-lab-geolocation)
+2. **Use M-Lab server-selection metadata to identify likely errors** — M-Lab uses one geolocation system at test time to select a nearby server and another system to annotate the public dataset. As described in M-Lab blog post [Improving M-Lab Geolocation](https://measurementlab.net/blog/improving-m-lab-geolocation), researchers can compare the server that actually served the test with the nearest server implied by the published client geolocation. Large inconsistencies between the two can flag potentially incorrect client geolocation. 
 3. **Avoid overinterpreting city labels** — city-level labels are useful for coarse aggregation, not for neighborhood-, block-, or infrastructure-level claims.
 4. **Aggregate spatially** — use larger geographic cells or administrative regions rather than individual latitude/longitude points.
 5. **Use `Region` for sub-national analysis** — ISO 3166-2 region codes are generally more appropriate for state/province-level analysis than city centroids.
@@ -132,5 +132,5 @@ When joining M-Lab data with external datasets (census, FCC broadband maps, etc.
 | State/Province | High/Medium | `Region` (ISO 3166-2) |
 | City | Medium | `City` name, but validate with test counts |
 | ZIP/Postal | Low | Use sparingly, US only |
-| Lat/lon | Low | Only for coarse (50+ km) spatial analysis |
+| Lat/Lon | Low | Only for coarse (50+ km) spatial analysis |
 
