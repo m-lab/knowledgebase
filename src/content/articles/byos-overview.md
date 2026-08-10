@@ -14,16 +14,15 @@ difficulty: intermediate
 2. [Requirements](#requirements)
 3. [Eligibility](#eligibility)
 4. [Software Deployment](#software-deployment)
-5. [Configuration](#configuration)
-6. [Operations & Monitoring](#operations--monitoring)
+5. [Operations & Monitoring](#operations--monitoring)
 
 ---
 
 ## Registration
 
-**Start here:** Complete the [Infrastructure Contribution Form](https://measurementlab.net), which includes agreeing to M-Lab's:
-- Acceptable Use Policy
-- Privacy Policy
+**Start here:** Complete the [Infrastructure Contribution Form](https://docs.google.com/forms/d/e/1FAIpQLSejtmZJrW8BPuuhjG4FlGm0fFmN3cW6onvLsCxkd3UnECVd9Q/viewform?usp=dialog), which includes agreeing to M-Lab's:
+- [Acceptable Use Policy](/aup)
+- [Privacy Policy](/privacy)
 - Technical Requirements (listed below)
 
 **What happens next:**
