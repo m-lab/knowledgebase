@@ -99,7 +99,7 @@ The NDT7 table is large (~0.5 TB/day of new data). **Always** filter by `DATE(a.
 
 ```sql
 -- Efficient: uses partition pruning
-WHERE DATE(a.TestTime) = '2024-06-01'
+WHERE date = '2024-06-01'
 
 -- Inefficient: scans all partitions (very expensive)
 WHERE a.TestTime > '2024-06-01'
