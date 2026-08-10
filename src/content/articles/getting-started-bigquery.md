@@ -107,26 +107,6 @@ WHERE a.TestTime > '2024-06-01'
 
 Use the **preview** feature in the BigQuery UI to inspect data before running queries. The daily query limit per user per day is currently set to 10TiB.
 
-## Exporting Data
-
-For larger analyses, export to Google Cloud Storage rather than downloading from BigQuery:
-
-<!-- sqltest -->
-```sql
--- Export example
-EXPORT DATA
-  OPTIONS (
-    uri = 'gs://your-bucket/ndt7-export-*.csv',
-    format = 'CSV',
-    overwrite = true
-  )
-AS (
-  SELECT a.TestTime, a.MeanThroughputMbps, client.Geo.CountryCode
-  FROM `measurement-lab.ndt.ndt7_union`
-  WHERE date = '2024-06-01'
-);
-```
-
 ## Further Reading
 
 - [M-Lab BigQuery Schema](https://www.measurementlab.net/data/docs/bq/schema) — full schema documentation
