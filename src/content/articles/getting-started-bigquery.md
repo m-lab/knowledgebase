@@ -95,7 +95,7 @@ server.Metro            — metro area (e.g., "lga" for New York)
 
 ## Query Costs and Partition Pruning
 
-The NDT7 table is large (~0.5 TB/day of new data). **Always** filter by `DATE(a.TestTime)` to use BigQuery's partition pruning:
+The NDT7 table is large (more than 100GB/day of new data). **Always** filter by `DATE(a.TestTime)` to use BigQuery's partition pruning:
 
 ```sql
 -- Efficient: uses partition pruning
