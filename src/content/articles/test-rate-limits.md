@@ -20,7 +20,7 @@ For software or hardware integrations M-Lab recommends testing no more than 4 ti
 
 ## Need higher rate limits?
 
-If you need to conduct measurements at a higher rate for legitimate research purposes, please contact M-Lab support to discuss your requirements. We may be able to accommodate special cases with proper justification.
+If you need to conduct measurements at a higher rate for legitimate research purposes, please contact M-Lab support at [support@measurementlab.net](mailto:support@measurementlab.net) to discuss your requirements. We may be able to accommodate special cases with proper justification.
 
 ## Alternative Approaches
 
