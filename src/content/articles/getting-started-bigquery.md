@@ -95,11 +95,11 @@ server.Site             — M-Lab site ID (e.g., "lga01")
 
 ## Query Costs and Partition Pruning
 
-The NDT7 table is large (more than 100GB/day of new data). **Always** filter by `a.date` to use BigQuery's partition pruning:
+The NDT7 table is large (more than 100GB/day of new data). **Always** filter by `date` to use BigQuery's partition pruning:
 
 ```sql
 -- Efficient: uses partition pruning
-WHERE a.date = '2024-06-01'
+WHERE date = '2024-06-01'
 
 -- Inefficient: scans all partitions (very expensive)
 WHERE a.TestTime > '2024-06-01'
