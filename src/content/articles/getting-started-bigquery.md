@@ -42,12 +42,12 @@ BigQuery's `bq` command-line tool is now available and queries against `measurem
 
 ### Service Accounts
 
-If you need to query from an application using a service account (`@developer.gserviceaccount.com`), email [support@measurementlab.net](mailto:support@measurementlab.net) so M-Lab can add it to M-Lab Discuss manually. Ensure the account has the **BigQuery User**, **BigQuery Job User**, and **BigQuery Data Viewer** IAM roles on the `measurement-lab` project.
+If you need to query from an application using a service account (`@developer.gserviceaccount.com`), email [support@measurementlab.net](mailto:support@measurementlab.net) so M-Lab can add it to M-Lab Discuss manually. 
 
 ## Your First Query
 
 For speed test results, you can start with the `measurement-lab.ndt.ndt7_union` table.
-For example, for the average download speed by country for the last 30 days:
+For example, for the average download speed by country for a day:
 
 <!-- sqltest -->
 ```sql
@@ -60,6 +60,7 @@ FROM `measurement-lab.ndt.ndt7_union`
 WHERE date = '2024-06-01'
   AND a.MeanThroughputMbps > 0
   AND a.MeanThroughputMbps < 10000   -- exclude outliers
+  AND raw.Download.UUID IS NOT NULL  -- include only tests with populated Download field
 GROUP BY country
 ORDER BY median_download_mbps DESC
 LIMIT 20
@@ -83,23 +84,22 @@ a.MinRTT                — minimum RTT in milliseconds
 a.LossRate              — packet loss fraction (0.0–1.0)
 
 client.Geo.CountryCode  — ISO 3166-1 alpha-2 country code
-client.Geo.Region       — ISO 3166-2 region/subdivision code
+client.Geo.Subdivision1ISOCode       — ISO 3166-2 region/subdivision code
 client.Geo.City         — city name (MaxMind, coarse precision)
 
 client.Network.ASNumber — client's Autonomous System Number
 client.Network.ASName   — client's ISP/network name
 
 server.Site             — M-Lab site ID (e.g., "lga01")
-server.Metro            — metro area (e.g., "lga" for New York)
 ```
 
 ## Query Costs and Partition Pruning
 
-The NDT7 table is large (more than 100GB/day of new data). **Always** filter by `DATE(a.TestTime)` to use BigQuery's partition pruning:
+The NDT7 table is large (more than 100GB/day of new data). **Always** filter by `a.date` to use BigQuery's partition pruning:
 
 ```sql
 -- Efficient: uses partition pruning
-WHERE date = '2024-06-01'
+WHERE a.date = '2024-06-01'
 
 -- Inefficient: scans all partitions (very expensive)
 WHERE a.TestTime > '2024-06-01'
@@ -113,4 +113,3 @@ Use the **preview** feature in the BigQuery UI to inspect data before running qu
 - [NDT (Network Diagnostic Tool)](../test-ndt) — the primary dataset
 - [Analyzing M-Lab Data: A Researcher's Guide](../research-guide) — ISP comparison patterns and advanced queries
 
-<!-- TODO: Add section on using the BigQuery API from Python (google-cloud-bigquery library). Add worked example of ISP comparison query. Add section on M-Lab's long-term schema support policy (stable column names since 2020). Link to the M-Lab data documentation at measurementlab.net/data. -->
